@@ -1,0 +1,15 @@
+{
+    "app_id": "e2e-game-offers-app-podsf",
+    "config_version": 20200603,
+    "name": "e2e-game-offers-app",
+    "location": "US-OR",
+    "deployment_model": "LOCAL",
+    "security": {},
+    "custom_user_data_config": {
+        "enabled": false
+    },
+    "sync": {
+        "development_mode_enabled": false
+    },
+    "environment": "development"
+}

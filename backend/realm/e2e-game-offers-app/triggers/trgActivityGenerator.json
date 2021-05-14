@@ -1,0 +1,10 @@
+{
+    "id": "609ca166af38fabc823c2df2",
+    "name": "trgActivityGenerator",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "*/1 * * * *"
+    },
+    "function_name": "funcActivityGenerator",
+    "disabled": false
+}
