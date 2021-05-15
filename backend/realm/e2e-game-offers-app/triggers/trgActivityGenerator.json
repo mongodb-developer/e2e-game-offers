@@ -5,6 +5,6 @@
     "config": {
         "schedule": "*/1 * * * *"
     },
-    "function_name": "funcActivityGenerator",
+    "function_name": "funcMultiActivityGenerator",
     "disabled": false
 }
