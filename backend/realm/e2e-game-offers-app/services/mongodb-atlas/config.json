@@ -4,7 +4,7 @@
     "type": "mongodb-atlas",
     "config": {
         "clusterName": "game-main",
-        "readPreference": "primary",
+        "readPreference": "secondaryPreferred",
         "wireProtocolEnabled": false
     },
     "version": 1

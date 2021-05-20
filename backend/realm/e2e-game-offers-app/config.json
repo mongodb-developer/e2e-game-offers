@@ -5,6 +5,10 @@
     "location": "US-OR",
     "deployment_model": "LOCAL",
     "security": {},
+    "hosting": {
+        "enabled": true,
+        "app_default_domain": "e2e-game-offers-app-podsf.mongodbstitch.com"
+    },
     "custom_user_data_config": {
         "enabled": false
     },

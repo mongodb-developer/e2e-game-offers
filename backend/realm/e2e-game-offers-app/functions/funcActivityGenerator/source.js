@@ -23,8 +23,6 @@ exports = async function() {
   s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
   // Generate a player activity
-  const minPlayerId = 1000;
-  const maxPlayerId = 9999;
   const minCharacterId = 1;
   const maxCharacterId = 12;
   const equipmentTypes = {
@@ -52,37 +50,42 @@ exports = async function() {
   
   let equip = getEquipmentType();
   let ts = new Date();
+  
+  // DB access
+  const client = context.services.get("mongodb-atlas");
+  const db = client.db("game");
+  const collection = db.collection("playerEmails");
+  
+  // pick a random e-mail from the 10K email collection
+  let randomPlayer = await collection.aggregate([{ "$sample": { "size": 1 } }]).next();
+
+  // generate a new activity
   let activity = {
-    "playerId": Math.floor(Math.random() * (maxPlayerId - minPlayerId) + minPlayerId),
+    "playerId": randomPlayer.email,
     "characterId": Math.floor(Math.random() * (maxCharacterId - minCharacterId) + minCharacterId),
     "equipmentType": equip,
     "amount": (equip == "shards" ? Math.floor(Math.random() * (5 - 1) + 1) : 1), // 1 if level, abilities or gear. Random (1-5) if shards.
     "timestamp": ts
   };
 
-  // write activity to database
-  const collection = context.services.get("mongodb-atlas").db("game").collection("playerActivity");
-  collection.insertOne(activity);
+  // write activity to player telemetry on S3
+  const s3bucket = context.values.get("e2eS3Bucket");
+  const filename = `raw/${activity.playerId}/${activity.characterId}/${ts.getFullYear()}-${ts.getMonth().toString().padStart(2, '0')}.json`;  // PlayerId-CharacterId-YYYY-MM
 
-  // write to S3
-  const s3bucket = context.values.get("e2eS3Bucket"); // e2eS3BucketRK
-  const filename = `${activity.playerId}-${activity.characterId}-${ts.getFullYear()}-${ts.getMonth().toString().padStart(2, '0')}.json`;  // PlayerId-CharacterId-YYYY-MM
-
-  // does this file exist in S3 already?
+  // check if file already exists in S3
   try {
-    // Set the parameters
+    // set the s3.getObject parameters
     const getParams = {
       Bucket: s3bucket,
       Key: filename
     };
     
     s3.getObject({ 'Bucket': s3bucket, 'Key': filename }, (err, data) => {
-      // Handle any error and exit
+      // err => object not found
       if (err) {
-        //console.log(`${filename} not found...`);
         let activities = [activity];
-        //console.log("Writing activity to S3...");
-        
+
+        // parameters for s3.putObject call
         const putParams = {
           "Bucket": s3bucket,
           "Key": filename,
@@ -90,35 +93,32 @@ exports = async function() {
           "ContentType": "application/json"
         };
         
+        // insert new activity file to S3
         try {
           s3.putObject(putParams, (err, data) => {
-            // Handle any error and exit
+            // handle any error and exit
             if (err) {
-                console.log("PutObject error", err.toString('utf-8'));
+                console.log("PutObject error: ", err.toString('utf-8'));
                 return err;
             }
       
-            // No error happened
-            //console.log(`${filename} updated...`);
+            // activity saved successfully
           });
         } catch(putErr) {
-          errProps = Object.keys(getErr);
-          console.log("INSERT: " + errProps);
+          console.log("PutObject exception (insert): ", putErr.toString('utf-8'));
         }
       } else {
-        // No error happened
-        //console.log(`${filename} found...`);
-          
+        // no error => file already exists in S3, so update w/ new activity
+
         // Convert Body from a Buffer to a String
         let objectData = data.Body.toString('utf-8');
-        //console.log(objectData);
+
+        // activities are always an array
         let activities = JSON.parse(objectData);
-        //console.log("CURRENT: " + activities);
         if (Array.isArray(activities) && activities.length > 0) {
+          // add new activity to the list
           activities.push(activity);
-          //console.log("NEXT: " + activities);
-          //console.log("Writing activity to S3...");
-            
+
           const putParams = {
             "Bucket": s3bucket,
             "Key": filename,
@@ -128,7 +128,7 @@ exports = async function() {
             
           try {
             s3.putObject(putParams, (err, data) => {
-              // Handle any error and exit
+              // handle any error and exit
               if (err) {
                   console.log("PutObject error", err.toString('utf-8'));
                   return err;
@@ -138,11 +138,11 @@ exports = async function() {
               console.log(`${filename} updated...`);
             });
           } catch (putErr) {
-            errProps = Object.keys(getErr);
-            console.log("UPDATE: " + errProps);
+            console.log("PutObject exception (update)", putErr.toString('utf-8'));
           }
         } else {
-          console.log("This shouldn't happen -- activities isn't an array");
+          console.log("This shouldn't happen -- activities isn't an array??");
+          console.log(JSON.stringify(activities, null, 2));
         }
       }
     });
@@ -151,4 +151,95 @@ exports = async function() {
     // another S3 getObject error
     throw getErr;
   }
+  
+  // update player roster and TTL collections
+  updatePlayerRosterAnd7DayActivity(activity);
 };
+
+async function updatePlayerRosterAnd7DayActivity(newActivity) {
+  const client = context.services.get("mongodb-atlas");
+  const db = client.db("game");
+  const rosterCollection = db.collection("playerRoster");
+  const activityCollection = db.collection("playerActivityLast7Days");
+
+  // Step 1: Start a Client Session
+  const session = client.startSession();
+  
+  // Step 2: Define options to use for the transaction (optional)
+  const transactionOptions = {
+    readPreference: "primary",
+    readConcern: { level: "local" },
+    writeConcern: { w: "majority" },
+  };
+  
+  let incObject;
+  if(newActivity.equipmentType === "shards") {
+    incObject = { $inc: { "roster.$.shards": newActivity.amount } };
+  } else if (newActivity.equipmentType === "gear") {
+    incObject = { $inc: { "roster.$.gear": newActivity.amount } };
+  } else if (newActivity.equipmentType === "level") {
+    incObject = { $inc: { "roster.$.level": newActivity.amount } };
+  } else if (newActivity.equipmentType === "abilities") {
+    incObject = { $inc: { "roster.$.abilities": newActivity.amount } };
+  }
+  
+  // Step 3: Use withTransaction to start a transaction, execute the callback, and commit (or abort on error)
+  // Note: The callback for withTransaction MUST be async and/or return a Promise.
+  try {
+    let modifiedRoster, insertedActivity;
+    console.log(`NEW ACTIVITY: ${JSON.stringify(newActivity)}`);
+    await session.withTransaction(async () => {
+      // Step 4: Execute the queries you would like to include in one atomic transaction
+      // Important:: You must pass the session to the operations
+      modifiedRoster = await rosterCollection.findOneAndUpdate(
+        { "playerId": newActivity.playerId, "roster.characterId": newActivity.characterId },
+        incObject,
+        { session }
+      );
+      insertedActivity = await activityCollection.insertOne(
+        newActivity,
+        { session }
+      );
+    }, transactionOptions);
+    console.log(`MOD: ${JSON.stringify(incObject)}`);
+    console.log(`MOD: ${JSON.stringify(modifiedRoster)}`);
+    console.log("INS: " + JSON.stringify(insertedActivity));
+  } catch (err) {
+    // Step 5: Handle errors with a transaction abort
+    console.log(`CATCH: ${err}`);
+    await session.abortTransaction();
+    
+    // no match -- either no document for current playerId or no activity for characterId
+    //             try matching on playerId only and add an activity to the roster array
+    try {
+      await session.withTransaction(async () => {
+        let newRosterEntry = {
+          characterId: newActivity.characterId,
+          level: 1,
+          gear_tier: 1,
+          shards: newActivity.equipmentType === "shards" ? newActivity.amount : 0,
+          starts: 0,
+          redstars: 0,
+          abilities: newActivity.equipmentType === "abilities" ? newActivity.amount : 0
+        };
+        console.log(`1ST INS: ${newActivity.playerId} ${JSON.stringify(newRosterEntry)}`);
+        modifiedRoster = await rosterCollection.findOneAndUpdate(
+          { "playerId": newActivity.playerId },
+          { $push: { "roster": newRosterEntry } },
+          { session }
+        );
+        insertedActivity = await activityCollection.insertOne(
+          newActivity,
+          { session }
+        );
+      });
+    } catch (err) {
+      // Step 5: Handle errors with a transaction abort
+      console.log(`RETRY CATCH: ${err}`);
+      await session.abortTransaction();
+    }
+  } finally {
+    // Step 6: End the session when you complete the transaction
+    await session.endSession();
+  }
+}
