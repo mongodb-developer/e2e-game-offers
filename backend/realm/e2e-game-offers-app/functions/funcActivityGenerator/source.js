@@ -345,7 +345,7 @@ async function aggregateActivitiesForOffers() {
                 {
                   "$substr": [ "$_id.e", 1, { "$strLenBytes": "$_id.e" } ]
                 },
-                "TotalLast7D"
+                "Last7D"
               ]
             },
             "v": "$count"
