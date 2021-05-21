@@ -146,14 +146,15 @@ exports = async function() {
         }
       }
     });
+    
+    // update player roster, activity TTL, and activity for offers collections
+    updatePlayerRosterAnd7DayActivity(activity);
+    aggregateActivitiesForOffers();
   } catch (getErr) {
     console.log("GET ERROR: " + getErr);
     // another S3 getObject error
     throw getErr;
   }
-  
-  // update player roster and TTL collections
-  updatePlayerRosterAnd7DayActivity(activity);
 };
 
 async function updatePlayerRosterAnd7DayActivity(newActivity) {
@@ -205,7 +206,7 @@ async function updatePlayerRosterAnd7DayActivity(newActivity) {
     console.log(`MOD: ${JSON.stringify(modifiedRoster)}`);
     console.log("INS: " + JSON.stringify(insertedActivity));
   } catch (err) {
-    // Step 5: Handle errors with a transaction abort
+    // Step 5a: Handle errors with a transaction abort
     console.log(`CATCH: ${err}`);
     await session.abortTransaction();
     
@@ -234,12 +235,159 @@ async function updatePlayerRosterAnd7DayActivity(newActivity) {
         );
       });
     } catch (err) {
-      // Step 5: Handle errors with a transaction abort
+      // Step 5b: Handle errors with a transaction abort
       console.log(`RETRY CATCH: ${err}`);
       await session.abortTransaction();
     }
   } finally {
     // Step 6: End the session when you complete the transaction
     await session.endSession();
+  }
+}
+
+async function aggregateActivitiesForOffers() {
+    // DB access
+  const client = context.services.get("mongodb-atlas");
+  const db = client.db("game");
+  const rosterCollection = db.collection("playerRoster");
+  const last7daysCollection = db.collection("playerActivityLast7Days");
+
+  const aggrPipeline1 = [
+    {
+      "$unwind": { "path": "$roster" }
+    }, {
+      "$addFields": {
+        "nextRankIsRedStar": { "$gt": [ "$roster.redstars", "$roster.stars" ] }
+      }      
+    }, {
+      "$group": {
+        "_id": {
+            "p": "$playerId",
+            "c": "$roster.characterId",
+            "n": '$nextRankIsRedStar'
+        },
+        "totalShards": {
+            "$sum": "$roster.shards"
+        }
+      }
+    }, {
+      "$addFields": {
+        "shardsToNextRank": {
+          "$switch": {
+            "branches": [
+              { "case": { "$gte": [ "$totalShards", 810 ] }, "then": 0 },
+              { "case": { "$gte": [ "$totalShards", 510 ] }, "then": { "$subtract": [ 810, "$totalShards" ] } },
+              { "case": { "$gte": [ "$totalShards", 310 ] }, "then": { "$subtract": [ 510, "$totalShards" ] } },
+              { "case": { "$gte": [ "$totalShards", 180 ] }, "then": { "$subtract": [ 310, "$totalShards" ] } },
+              { "case": { "$gte": [ "$totalShards", 100 ] }, "then": { "$subtract": [ 180, "$totalShards" ] } },
+              { "case": { "$gte": [ "$totalShards", 45 ] }, "then": { "$subtract": [ 100, "$totalShards" ] } },
+              { "case": { "$gte": [ "$totalShards", 15 ] }, "then": { "$subtract": [ 45, "$totalShards" ] } },
+            ],
+            "default": { "$subtract": [ 15, "$totalShards" ] }
+          }
+        },
+        "nextRankIsRedStar": "$_id.n"
+      }
+    }, {
+      "$lookup": {
+        "from": "playerProfile",
+        "localField": "_id.p",
+        "foreignField": "playerId",
+        "as": "profile"
+      }
+    }, {
+      "$addFields": {
+        "historicalSpend": { "$arrayElemAt": [ "$profile.stats.total_money_spent", 0 ] },
+        "totalPlayTimeLast7D": { "$arrayElemAt": [ "$profile.stats.total_game_time_days", 0 ] }
+      }
+    }, {
+      "$addFields": {
+        "playerId": "$_id.p",
+        "characterId": "$_id.c"
+      }
+    }, {
+      "$unset": [ "profile", "_id" ]
+    }, {
+      "$merge": {
+        "into": "playerActivityForPersonalizedOffers",
+        "on": [ "playerId", "characterId" ],
+        "whenMatched": "merge",
+        "whenNotMatched": "insert"
+      }
+    }
+  ];
+  const aggrPipeline2 = [
+    {
+      "$group": {
+        "_id": {
+          "p": "$playerId",
+          "c": "$characterId",
+          "e": "$equipmentType"
+        },
+        "count": {
+          "$sum": "$amount"
+        }
+      }
+    }, {
+      "$group": {
+        "_id": {
+          "p": "$_id.p",
+          "c": "$_id.c"
+        },
+        "p": {
+          "$push": {
+            "k": {
+              "$concat": [
+                "totalEquip",
+                {
+                  "$toUpper": { "$substr": [ "$_id.e", 0, 1 ] }
+                },
+                {
+                  "$substr": [ "$_id.e", 1, { "$strLenBytes": "$_id.e" } ]
+                },
+                "TotalLast7D"
+              ]
+            },
+            "v": "$count"
+          }
+        }
+      }
+    }, {
+      "$replaceWith": {
+        "$mergeObjects": [
+          { "playerId": "$_id" },
+          { "$arrayToObject": "$p" }
+        ]
+      }
+    }, {
+      "$addFields": {
+        "playerId": "$playerId.p",
+        "characterId": "$playerId.c",
+        "totalEquipsLast7D": {
+          "$add": [
+            { "$ifNull": [ "$totalEquipShardsLast7D", 0 ] },
+            { "$ifNull": [ "$totalEquipLevelLast7D", 0 ]},
+            { "$ifNull": [ "$totalEquipAbilityLast7D", 0 ] },
+            { "$ifNull": [ "$totalEquipGearLast7D", 0 ] }
+          ]
+        }
+      }
+    }, {
+      "$merge": {
+        "into": "playerActivityForPersonalizedOffers",
+        "on": [ "playerId", "characterId" ],
+        "whenMatched": "merge",
+        "whenNotMatched": "insert"
+      }
+    }
+  ];
+  
+  try {
+    await rosterCollection.aggregate(aggrPipeline1).next();
+    console.log("AGGR1");
+    await last7daysCollection.aggregate(aggrPipeline2).next();
+    console.log("AGGR2");
+  } catch(err) {
+    console.log("AGGR ERROR: " + err);
   }
 }
