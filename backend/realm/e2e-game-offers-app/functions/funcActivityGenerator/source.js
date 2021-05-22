@@ -257,18 +257,18 @@ async function aggregateActivitiesForOffers() {
       "$unwind": { "path": "$roster" }
     }, {
       "$addFields": {
-        "nextRankIsRedStar": { "$gt": [ "$roster.redstars", "$roster.stars" ] }
-      }      
+        "nextRankIsRedStar": {
+          "$gt": ["$roster.redstars", "$roster.stars"]
+        }
+      }
     }, {
       "$group": {
         "_id": {
-            "p": "$playerId",
-            "c": "$roster.characterId",
-            "n": '$nextRankIsRedStar'
+          "p": "$playerId",
+          "c": "$roster.characterId",
+          "n": "$nextRankIsRedStar"
         },
-        "totalShards": {
-            "$sum": "$roster.shards"
-        }
+        "totalShards": { "$sum": "$roster.shards" }
       }
     }, {
       "$addFields": {
@@ -296,26 +296,62 @@ async function aggregateActivitiesForOffers() {
         "as": "profile"
       }
     }, {
-      "$addFields": {
-        "historicalSpend": { "$arrayElemAt": [ "$profile.stats.total_money_spent", 0 ] },
-        "totalPlayTimeLast7D": { "$arrayElemAt": [ "$profile.stats.total_game_time_days", 0 ] }
-      }
+        "$addFields": {
+          "historicalSpend": {
+            "$arrayElemAt": [ "$profile.stats.total_money_spent", 0 ]
+          },
+          "totalPlayTimeLast7D": {
+            "$arrayElemAt": [ "$profile.stats.total_game_time_days", 0 ]
+          }
+        }
     }, {
       "$addFields": {
         "playerId": "$_id.p",
         "characterId": "$_id.c"
       }
     }, {
-      "$unset": [ "profile", "_id" ]
+      "$unset": [
+        "profile",
+        "_id"
+      ]
+    }, {
+      "$lookup": {
+        "from": "playerActivityLast7Days",
+        "let": {
+            "p": "$playerId",
+            "c": "$characterId"
+        },
+        "pipeline": [{
+          "$match": {
+            "$expr": {
+              "$and": [
+                { "$eq": ["$playerId", "$$p"] },
+                { "$eq": ["$characterId", "$$c"] }
+              ]
+            }
+          }
+        }],
+        "as": "activity"
+      }
+    }, {
+      "$match": {
+        "activity": { "$gt": {"$size": 0}}
+      }
+    }, {
+      "$unset": "activity"
     }, {
       "$merge": {
         "into": "playerActivityForPersonalizedOffers",
-        "on": [ "playerId", "characterId" ],
+        "on": [
+          "playerId",
+          "characterId"
+        ],
         "whenMatched": "merge",
         "whenNotMatched": "insert"
       }
     }
   ];
+
   const aggrPipeline2 = [
     {
       "$group": {
@@ -364,12 +400,7 @@ async function aggregateActivitiesForOffers() {
         "playerId": "$playerId.p",
         "characterId": "$playerId.c",
         "totalEquipsLast7D": {
-          "$add": [
-            { "$ifNull": [ "$totalEquipShardsLast7D", 0 ] },
-            { "$ifNull": [ "$totalEquipLevelLast7D", 0 ]},
-            { "$ifNull": [ "$totalEquipAbilityLast7D", 0 ] },
-            { "$ifNull": [ "$totalEquipGearLast7D", 0 ] }
-          ]
+          "$sum": [ "$totalEquipShardsLast7D", "$totalEquipLevelLast7D", "$totalEquipAbilityLast7D", "$totalEquipGearLast7D", 0 ]
         }
       }
     }, {
