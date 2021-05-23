@@ -1,0 +1,6 @@
+{
+    "id": "609d8026343d9f792de5dca4",
+    "name": "e2eS3Bucket",
+    "value": "e2e-player-activity",
+    "from_secret": false
+}

@@ -1,0 +1,12 @@
+{
+    "id": "609d5d55da0db6ca8d89172f",
+    "name": "aws",
+    "type": "aws",
+    "config": {
+        "accessKeyId": "AKIA6IESFAOZY2SRRC7F"
+    },
+    "secret_config": {
+        "secretAccessKey": "SECRET_ACCESS_KEY"
+    },
+    "version": 1
+}
