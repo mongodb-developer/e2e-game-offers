@@ -1,0 +1,11 @@
+{
+    "id": "609c722eaf38fabc8224e90a",
+    "name": "mongodb-atlas",
+    "type": "mongodb-atlas",
+    "config": {
+        "clusterName": "game-main",
+        "readPreference": "secondaryPreferred",
+        "wireProtocolEnabled": false
+    },
+    "version": 1
+}
