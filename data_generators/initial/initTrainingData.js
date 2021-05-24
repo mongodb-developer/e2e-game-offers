@@ -29,6 +29,10 @@ async function main() {
 
     client.close();
 }
+
+async function insertPlayerActivityAndCharacterStateAtOfferPurchase() {
+    
+}
   
 async function insertPlayersInBulk(startPlayerId, endPlayerId, client) {
 
