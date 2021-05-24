@@ -9,7 +9,7 @@ exports = function(arg) {
    *
    */
    
-  const numActivitiesPerRun = 1;
+  const numActivitiesPerRun = 5;
   
   for (let i=0; i < numActivitiesPerRun; i++) {
     context.functions.execute("funcActivityGenerator");
