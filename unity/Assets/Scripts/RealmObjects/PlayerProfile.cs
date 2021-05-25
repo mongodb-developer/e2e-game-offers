@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Realms;
 using MongoDB.Bson;
 
+[System.Serializable]
 public class PlayerProfile : RealmObject
 {
     [PrimaryKey]
