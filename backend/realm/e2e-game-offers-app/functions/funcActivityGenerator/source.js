@@ -5,14 +5,17 @@ exports = async function() {
    * be updated, otherwise a new file will be created in the bucket.
    *
    * Date          Version        Author            Notes
-   * --------------------------------------------------------------
+   * ---------------------------------------------------------------------
    * 2021-05-13    1.0            Roy Kiesler       Initial version
+   * 2021-05-24    1.1            Roy Kiesler       Added multi-iteration
    *
    */
    
-  const AWS = require('aws-sdk');
+  // # of activities
+  const numActivitiesToGenerate = parseInt(context.values.get("NUM_ACTIVITIES_TO_GENERATE")) || 1;
 
   // Set the Credentials, Region
+  const AWS = require('aws-sdk');
   AWS.config.update({
     accessKeyId: context.values.get("ACCESS_KEY_ID"),
     secretAccessKey: context.values.get("SECRET_ACCESS_KEY_VAR"),
@@ -56,105 +59,111 @@ exports = async function() {
   const db = client.db("game");
   const collection = db.collection("playerEmails");
   
-  // pick a random e-mail from the 10K email collection
-  let randomPlayer = await collection.aggregate([{ "$sample": { "size": 1 } }]).next();
-
-  // generate a new activity
-  let activity = {
-    "playerId": randomPlayer.email,
-    "characterId": Math.floor(Math.random() * (maxCharacterId - minCharacterId) + minCharacterId),
-    "equipmentType": equip,
-    "amount": (equip == "shards" ? Math.floor(Math.random() * (5 - 1) + 1) : 1), // 1 if level, abilities or gear. Random (1-5) if shards.
-    "timestamp": ts
-  };
-
-  // write activity to player telemetry on S3
-  const s3bucket = context.values.get("e2eS3Bucket");
-  const filename = `raw/${activity.playerId}/${activity.characterId}/${ts.getFullYear()}-${ts.getMonth().toString().padStart(2, '0')}.json`;  // PlayerId-CharacterId-YYYY-MM
-
-  // check if file already exists in S3
-  try {
-    // set the s3.getObject parameters
-    const getParams = {
-      Bucket: s3bucket,
-      Key: filename
+  for (let i=0; i < numActivitiesToGenerate; i++) {
+    // pick a random e-mail from the 10K email collection
+    let randomPlayer = await collection.aggregate([{ "$sample": { "size": 1 } }]).next();
+  
+    // generate a new activity
+    let activity = {
+      "playerId": randomPlayer.email,
+      "characterId": Math.floor(Math.random() * (maxCharacterId - minCharacterId) + minCharacterId),
+      "equipmentType": equip,
+      "amount": (equip == "shards" ? Math.floor(Math.random() * (5 - 1) + 1) : 1), // 1 if level, abilities or gear. Random (1-5) if shards.
+      "timestamp": ts
     };
-    
-    s3.getObject({ 'Bucket': s3bucket, 'Key': filename }, (err, data) => {
-      // err => object not found
-      if (err) {
-        let activities = [activity];
-
-        // parameters for s3.putObject call
-        const putParams = {
-          "Bucket": s3bucket,
-          "Key": filename,
-          "Body": JSON.stringify(activities, null, 2),
-          "ContentType": "application/json"
-        };
-        
-        // insert new activity file to S3
-        try {
-          s3.putObject(putParams, (err, data) => {
-            // handle any error and exit
-            if (err) {
-                console.log("PutObject error: ", err.toString('utf-8'));
-                return err;
-            }
+  
+    // write activity to player telemetry on S3
+    const s3bucket = context.values.get("e2eS3Bucket");
+    const filename = `raw/${activity.playerId}/${activity.characterId}/${ts.getFullYear()}-${ts.getMonth().toString().padStart(2, '0')}.json`;  // PlayerId-CharacterId-YYYY-MM
+  
+    // check if file already exists in S3
+    try {
+      // set the s3.getObject parameters
+      const getParams = {
+        Bucket: s3bucket,
+        Key: filename
+      };
       
-            // activity saved successfully
-          });
-        } catch(putErr) {
-          console.log("PutObject exception (insert): ", putErr.toString('utf-8'));
-        }
-      } else {
-        // no error => file already exists in S3, so update w/ new activity
-
-        // Convert Body from a Buffer to a String
-        let objectData = data.Body.toString('utf-8');
-
-        // activities are always an array
-        let activities = JSON.parse(objectData);
-        if (Array.isArray(activities) && activities.length > 0) {
-          // add new activity to the list
-          activities.push(activity);
-
+      s3.getObject({ 'Bucket': s3bucket, 'Key': filename }, (err, data) => {
+        // err => object not found
+        if (err) {
+          let activities = [activity];
+  
+          // parameters for s3.putObject call
           const putParams = {
             "Bucket": s3bucket,
             "Key": filename,
             "Body": JSON.stringify(activities, null, 2),
             "ContentType": "application/json"
           };
-            
+          
+          // insert new activity file to S3
           try {
             s3.putObject(putParams, (err, data) => {
               // handle any error and exit
               if (err) {
-                  console.log("PutObject error", err.toString('utf-8'));
+                  console.log("PutObject error: ", err.toString('utf-8'));
                   return err;
               }
         
-              // No error happened
-              console.log(`${filename} updated...`);
+              // activity saved successfully
             });
-          } catch (putErr) {
-            console.log("PutObject exception (update)", putErr.toString('utf-8'));
+          } catch(putErr) {
+            console.log("PutObject exception (insert): ", putErr.toString('utf-8'));
           }
         } else {
-          console.log("This shouldn't happen -- activities isn't an array??");
-          console.log(JSON.stringify(activities, null, 2));
+          // no error => file already exists in S3, so update w/ new activity
+  
+          // Convert Body from a Buffer to a String
+          let objectData = data.Body.toString('utf-8');
+  
+          // activities are always an array
+          let activities = JSON.parse(objectData);
+          if (Array.isArray(activities) && activities.length > 0) {
+            // add new activity to the list
+            activities.push(activity);
+  
+            const putParams = {
+              "Bucket": s3bucket,
+              "Key": filename,
+              "Body": JSON.stringify(activities, null, 2),
+              "ContentType": "application/json"
+            };
+              
+            try {
+              s3.putObject(putParams, (err, data) => {
+                // handle any error and exit
+                if (err) {
+                    console.log("PutObject error", err.toString('utf-8'));
+                    return err;
+                }
+          
+                // No error happened
+                console.log(`${filename} updated...`);
+              });
+            } catch (putErr) {
+              console.log("PutObject exception (update)", putErr.toString('utf-8'));
+            }
+          } else {
+            console.log("This shouldn't happen -- activities isn't an array??");
+            console.log(JSON.stringify(activities, null, 2));
+          }
         }
+      });
+      
+      // update player roster, activity TTL, and activity for offers collections
+      updatePlayerRosterAnd7DayActivity(activity);
+      
+      // aggregate on the last iteration
+      if (i === numActivitiesToGenerate-1) {
+        aggregateActivitiesForOffers();
       }
-    });
-    
-    // update player roster, activity TTL, and activity for offers collections
-    updatePlayerRosterAnd7DayActivity(activity);
-    aggregateActivitiesForOffers();
-  } catch (getErr) {
-    console.log("GET ERROR: " + getErr);
-    // another S3 getObject error
-    throw getErr;
-  }
+    } catch (getErr) {
+      console.log("GET ERROR: " + getErr);
+      // another S3 getObject error
+      throw getErr;
+    }
+  } // end for
 };
 
 async function updatePlayerRosterAnd7DayActivity(newActivity) {
