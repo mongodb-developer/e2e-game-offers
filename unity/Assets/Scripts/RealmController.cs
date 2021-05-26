@@ -17,6 +17,7 @@ public class RealmController : MonoBehaviour {
     private App _realmApp;
     private User _realmUser;
     private PlayerProfile _playerProfile;
+    private PlayerRoster _playerRoster;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -42,7 +43,11 @@ public class RealmController : MonoBehaviour {
             } else {
                 _realm = Realm.GetInstance(new SyncConfiguration(email, _realmUser));
             }
-            _playerProfile = _realm.All<PlayerProfile>().Where(pp => pp.PlayerId == email).First();
+            Debug.Log(email + ": " + _realmUser.Id);
+            _playerProfile = _realm.All<PlayerProfile>().Where(pp => pp.PlayerId == email).FirstOrDefault();
+            _playerRoster = _realm.All<PlayerRoster>().Where(pr => pr.PlayerId == email).FirstOrDefault();
+            Debug.Log(_playerProfile);
+            Debug.Log(_playerRoster);
             return _playerProfile;
         }
         return _playerProfile;
@@ -56,8 +61,16 @@ public class RealmController : MonoBehaviour {
         return _playerProfile;
     }
 
+    public PlayerRoster GetCurrentPlayerRoster() {
+        return _playerRoster;
+    }
+
     public PlayerProfile GetOtherPlayerProfile(string email) {
         return _realm.All<PlayerProfile>().Where(pp => pp.PlayerId == email).First();
+    }
+
+    public PlayerRoster GetOtherPlayerRoster(string email) {
+        return _realm.All<PlayerRoster>().Where(pr => pr.PlayerId == email).First();
     }
 
 }
