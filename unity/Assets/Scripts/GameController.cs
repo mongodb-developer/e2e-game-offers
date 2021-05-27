@@ -16,9 +16,9 @@ public class GameController : MonoBehaviour {
     void Start() {
         PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
         PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+        PlayerRosterText.text = "ROSTER: \n";
         foreach(var rosterItem in RealmController.Instance.GetCurrentPlayerRoster().Roster) {
-            //PlayerRosterText.text += rosterItem.CharacterId + " / " + rosterItem.Level + " / " + rosterItem.Shards + " / " + rosterItem.Stars + "\n";
-            //PlayerRosterText.text += rosterItem;
+            PlayerRosterText.text += rosterItem.CharacterId + " / " + rosterItem.Level + " / " + rosterItem.Shards + " / " + rosterItem.Stars + "\n";
         }
     }
 

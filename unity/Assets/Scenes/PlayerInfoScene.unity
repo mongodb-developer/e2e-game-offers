@@ -194,7 +194,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'ROSTER:'
+  m_Text: 'ROSTER: '
 --- !u!222 &222929033
 CanvasRenderer:
   m_ObjectHideFlags: 0
