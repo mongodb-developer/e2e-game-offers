@@ -2,6 +2,8 @@
 const mgenerate = require("mgeneratejs");
 const MongoClient = require('mongodb').MongoClient;
 const NumberInt = require("mongodb").Int32; // https://stackoverflow.com/questions/56814654/whats-the-equivalent-of-numberint-from-the-mongo-shell-in-client-javascript
+const NumberDouble = require("mongodb").Double; // https://stackoverflow.com/questions/56814654/whats-the-equivalent-of-numberint-from-the-mongo-shell-in-client-javascript
+
 
 main().catch(console.error);
 
@@ -88,5 +90,8 @@ function generatePlayer(playerId) {
         }
     }
 
-    return mgenerate(playerTemplate);
+    var player = mgenerate(playerTemplate);
+    player.stats.totalMoneySpent = NumberDouble(player.stats.totalMoneySpent);
+
+    return mgenerate(player);
 }
