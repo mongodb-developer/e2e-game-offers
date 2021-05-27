@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "e2e-game-offers",
+  "private_key_id": "b851e95597d89c3969eb4830371e823403b0fff5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCp/c1Y4dHDU8h4\nXLYQxV5U2MdJL6EovNOw5M3jqgs5o5Z4qoJyGhwTLsTXIoeznhN+mp3L7UDfxqvO\n9jSLxhVJdlNf9j+JYiKMGsEqUu89yX8PTO5pVEw6oYpyUnx/QpX+8irBC7uu+TOV\nh1k0X3Xc5fOx28t3LRJOzJcMze15IefUBvlziJBTvdOZJTElKSkDjw01k95kcC47\n/VVpp1zXRzxj5F5nQ/tjD4Y60zafcjFPUzkryYWO4mfHHuBaemSuEsUtSAJOTZvJ\nqqYZClLhqx0vrJLg/I1WjeeGJiWNxGcK8tlXr3rHOXdaWPyvS2LLMimtscVj3YmJ\nCiwGpjqDAgMBAAECggEAHVMQnQAbqPfnkcfgioUZsEZTHo9uXDIyzIWz9M2tMQzE\n1N0JMrjJVg/P2hL1WOlwkHsItJihg9joY4P6bZBGtM0KNfgrXr5Emmm1H+F9rul3\nF0Mcr6PgoI6kbPNI0cVBTeElufaVsmn/2ZAnNc8v7GLoxqpVb6IhUeGePxG5IReN\na+6diz6oJxlnASt++ypuVP0gSyPe1t90F1CwVq4XJpZirlUbRiwQza78ORsc8SdC\nRrv/7/NIDri2VDvrbzuSu/nY6er0ATtYlIvEpgiUAJk0sKHnrqI/+SlyLesuxVJY\nyJEdZAI0qwN3qpBnwSw4lT5vF6hxpHUoVs7mHlrqxQKBgQDmX0cMI7DfU5VK/QKY\nYbDR3WQvxBldu3a3xQt3U2qHRBDzS/zu2RZ/VXfIIbTiIvU3e5AO8Y4Vw/puB418\nanEeyH1+/rqp6TV9xxDyJ9UcKzSdtA28vlkxoAon1heAoyz3GO4+nb5g1lw15i+u\nVRBRGREH0O6q0xp1z6+VD86/ZQKBgQC85vP/P7z8PYWb2wRgBpajUECBkjfCo4K7\nBiwPCNWGi0Nj5hTBSDNTxn7wN9x4JPFJn8+mLlbV56tHESMCVtbP3VmnyDpES1cY\nEY9iXGYRJ2faKfEjxNOCCibJvqGzS4zCIhfaRgOzAiCMkvGsmw+E63l+BU4bh7Kb\ntmHTeWH3xwKBgE0TnarDGj9uMKoZQtAHB2kAALA2lSIWQZ80ryRqZV8CeAVe7C5h\ntbQ+vUfZdzKd7Zt1nPpS+W3w1w4POthgqJ5bCBoAUiXdIAeIHfRXPWciUYVeI6Z9\nrUv8NsmjSNPCRJ4b2kJa9sJhlhJ2hId4cHAhyd/qmJ/Q5655IU7nLg49AoGAeMKM\nKRjuD7Kkv0X8Pgb4Nd8P3cVDsEInSLhhYhsbpa9RnYNwsT8e0OeMLrUHVCcJuS9Y\n57un94bqj7v8zXoGSUwQDJqL5SzkuJZBO3gmJ8ExOt6lMWCadf9XXJFpfd1GVrTE\n2tz3cHBjrnoh1V4rRaXjPRTXIfJV1AV79F0cq/ECgYAyBElwwy0XMvwMI++ib0Yf\nyQSbGeEiNnClo0L4Wc/o1v1VG+trEX34IZnwdLbkXG2MT4wO5R8qwIoC48TrCSle\nvKSbDPTBc8Ta92XNkaxjH9CZCUP8b/G7dsrZuLkRkoHjHUG3dA2tuHeJk02lk9RK\n/5Tig+tDS0CP29TBfgrWzg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "automl-appaccount@e2e-game-offers.iam.gserviceaccount.com",
+  "client_id": "102148793262056278003",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/automl-appaccount%40e2e-game-offers.iam.gserviceaccount.com"
+}
