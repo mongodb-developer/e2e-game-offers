@@ -10,7 +10,9 @@ exports = async function() {
    * 2021-05-24    1.1            Roy Kiesler       Added multi-iteration
    *
    */
-   
+  
+  //const BSON = require('bson');
+  
   // # of activities
   const numActivitiesToGenerate = parseInt(context.values.get("NUM_ACTIVITIES_TO_GENERATE")) || 1;
 
@@ -67,9 +69,10 @@ exports = async function() {
     let activity = {
       "playerId": randomPlayer.email,
       "characterId": Math.floor(Math.random() * (maxCharacterId - minCharacterId) + minCharacterId),
+      //"characterId": BSON.Int32(Math.floor(Math.random() * (maxCharacterId - minCharacterId) + minCharacterId)),
       "equipmentType": equip,
       "amount": (equip == "shards" ? Math.floor(Math.random() * (5 - 1) + 1) : 1), // 1 if level, abilities or gear. Random (1-5) if shards.
-      "timestamp": ts
+      "activityDt": ts
     };
   
     // write activity to player telemetry on S3
@@ -221,16 +224,19 @@ async function updatePlayerRosterAnd7DayActivity(newActivity) {
     
     // no match -- either no document for current playerId or no activity for characterId
     //             try matching on playerId only and add an activity to the roster array
+    /****
+     * temporarily commented out
+     * --------------------------
     try {
       await session.withTransaction(async () => {
         let newRosterEntry = {
-          characterId: newActivity.characterId,
-          level: 1,
-          gear_tier: 1,
-          shards: newActivity.equipmentType === "shards" ? newActivity.amount : 0,
-          starts: 0,
-          redstars: 0,
-          abilities: newActivity.equipmentType === "abilities" ? newActivity.amount : 0
+          characterId: BSON.Int32(newActivity.characterId),
+          level: BSON.Int32(1),
+          gear_tier: BSON.Int32(1),
+          shards: newActivity.equipmentType === "shards" ? BSON.Int32(newActivity).amount : BSON.Int32(0),
+          stars: BSON.Int32(0),
+          redStars: BSON.Int32(0),
+          abilities: newActivity.equipmentType === "abilities" ? BSON.Int32(newActivity.amount) : BSON.Int32(0)
         };
         console.log(`1ST INS: ${newActivity.playerId} ${JSON.stringify(newRosterEntry)}`);
         modifiedRoster = await rosterCollection.findOneAndUpdate(
@@ -247,7 +253,7 @@ async function updatePlayerRosterAnd7DayActivity(newActivity) {
       // Step 5b: Handle errors with a transaction abort
       console.log(`RETRY CATCH: ${err}`);
       await session.abortTransaction();
-    }
+    } */ // end temporary comment out
   } finally {
     // Step 6: End the session when you complete the transaction
     await session.endSession();
@@ -266,8 +272,8 @@ async function aggregateActivitiesForOffers() {
       "$unwind": { "path": "$roster" }
     }, {
       "$addFields": {
-        "nextRankIsRedStar": {
-          "$gt": ["$roster.redstars", "$roster.stars"]
+        "isNextRankARedStar": {
+          "$gt": ["$roster.redStars", "$roster.stars"]
         }
       }
     }, {
@@ -275,7 +281,7 @@ async function aggregateActivitiesForOffers() {
         "_id": {
           "p": "$playerId",
           "c": "$roster.characterId",
-          "n": "$nextRankIsRedStar"
+          "n": "$isNextRankARedStar"
         },
         "totalShards": { "$sum": "$roster.shards" }
       }
@@ -295,7 +301,7 @@ async function aggregateActivitiesForOffers() {
             "default": { "$subtract": [ 15, "$totalShards" ] }
           }
         },
-        "nextRankIsRedStar": "$_id.n"
+        "isNextRankARedStar": "$_id.n"
       }
     }, {
       "$lookup": {
@@ -307,10 +313,10 @@ async function aggregateActivitiesForOffers() {
     }, {
         "$addFields": {
           "historicalSpend": {
-            "$arrayElemAt": [ "$profile.stats.total_money_spent", 0 ]
+            "$arrayElemAt": [ "$profile.stats.totalMoneySpent", 0 ]
           },
           "totalPlayTimeLast7D": {
-            "$arrayElemAt": [ "$profile.stats.total_game_time_days", 0 ]
+            "$arrayElemAt": [ "$profile.stats.totalGameTimeDays", 0 ]
           }
         }
     }, {

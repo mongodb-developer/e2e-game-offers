@@ -1,8 +1,6 @@
 {
     "id": "60ac6c88b655c6ec4eafe23d",
     "name": "NUM_ACTIVITIES_TO_GENERATE",
-    "value": {
-        "$numberInt": "10"
-    },
+    "value": "10",
     "from_secret": false
 }
