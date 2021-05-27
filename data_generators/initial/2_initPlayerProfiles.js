@@ -75,7 +75,12 @@ function generatePlayer(playerId) {
                                                 "weights": [29, 60, 10, 1]}},
             "mvpWins":                 {"$natural":{"min":0, "max":650}},
             "totalGameTimeDays":       {"$natural":{"min":1, "max":1200}},
-            "totalMoneySpent":         {"$choose": {"from": [{"$natural":{"min":1, "max":200}},{"$natural":{"min":201, "max":600}}, {"$natural":{"min":601, "max":4000}}, {"$natural":{"min":4001, "max":10000}}], "weights": [29,60, 10, 1]}}
+            "totalMoneySpent":         {"$choose": {"from": [
+                {"$double":{"min":0, "max":200, "fixed":2}},
+                {"$double":{"min":201, "max":600, "fixed":2}},
+                {"$double":{"min":601, "max":4000, "fixed":2}},
+                {"$double":{"min":4001, "max":10000, "fixed":2}}],
+                    "weights": [29,60, 10, 1]}}
         },
         "globalGameCounters" : {
             "gold":     {"$natural":{"min":1, "max":10000000}},

@@ -51,8 +51,8 @@ function generateOffer(playerId) {
         characterId:        {"$natural":  {"min":1, "max":12}},
         offerId:            {"$choose":   {"from": [1,2,3,4,5], "weights": [10, 40, 35, 10, 5]}},
         shards:             {"$choose":   {"from": [50,50,30,50,75], "weights": [10, 40, 35, 10, 5]}},
-        price:              {"$choose":   {"from": [30,20,10,10,5], "weights": [10, 40, 35, 10, 5]}},
-        predictionScore:    {"$floating": {"min":0, "max":1, "fixed": 14}},
+        price:              {"$choose":   {"from": [29.99,19.99,9.99,9.99,4.99], "weights": [10, 40, 35, 10, 5]}},
+        predictionScore:    {"$double": {"min":0, "max":1, "fixed": 14}},
         predictionDt:       "$date",
         isPurchased:        "$bool",
         purchaseDt:         "$date"
@@ -66,27 +66,27 @@ function generateOffer(playerId) {
     switch (offer.offerId) {
         case 1:
             offer.shards = 50;
-            offer.price = 30;
+            offer.price = 29.99;
             break;
         case 2:
             offer.shards = 50;
-            offer.price = 20;
+            offer.price = 19.99;
             break;
         case 3:
             offer.shards = 30;
-            offer.price = 10;
+            offer.price = 9.99;
             break;
         case 4:
             offer.shards = 50;
-            offer.price = 10;
+            offer.price = 9.99;
             break;
         case 5:
             offer.shards = 75;
-            offer.price = 5;
+            offer.price = 4.99;
             break;
         default:
             offer.shards = 0;
-            offer.price = 0;
+            offer.price = 0.00;
     }
     console.log ("Generated this offer: " + JSON.stringify(offer));
 
