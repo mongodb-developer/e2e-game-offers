@@ -10,70 +10,71 @@ public class PlayerProfile : RealmObject {
     [MapTo("_id")]
     public ObjectId? Id { get; set; }
 
-    [MapTo("avatar_id")]
-    public string AvatarId { get; set; }
+    [MapTo("avatarId")]
+    public int? AvatarId { get; set; }
 
-    [MapTo("device_benchmark")]
-    public PlayerProfile_device_benchmark DeviceBenchmark { get; set; }
+    [MapTo("deviceBenchmark")]
+    public PlayerProfile_deviceBenchmark DeviceBenchmark { get; set; }
 
     [MapTo("geo")]
     public string Geo { get; set; }
 
-    [MapTo("global_game_counters")]
-    public PlayerProfile_global_game_counters GlobalGameCounters { get; set; }
+    [MapTo("globalGameCounters")]
+    public PlayerProfile_globalGameCounters GlobalGameCounters { get; set; }
 
-    [MapTo("lastLogin_ts")]
-    public DateTimeOffset? LastLoginTs { get; set; }
+    [MapTo("lastLoginDt")]
+    public DateTimeOffset? LastLoginDt { get; set; }
 
     [MapTo("locale")]
-    public PlayerProfile_locale Locale { get; set; }
+    public string Locale { get; set; }
 
     [MapTo("playerId")]
     public string PlayerId { get; set; }
 
-    [MapTo("signUp_ts")]
-    public DateTimeOffset? SignUpTs { get; set; }
+    [MapTo("signUpDt")]
+    public DateTimeOffset? SignUpDt { get; set; }
 
     [MapTo("stats")]
     public PlayerProfile_stats Stats { get; set; }
 
 }
 
-public class PlayerProfile_device_benchmark : EmbeddedObject {
+
+public class PlayerProfile_deviceBenchmark : EmbeddedObject {
 
     [MapTo("accelerometer")]
     public bool? Accelerometer { get; set; }
 
-    [MapTo("device_model")]
+    [MapTo("deviceModel")]
     public string DeviceModel { get; set; }
 
-    [MapTo("graphics_memory_size")]
+    [MapTo("graphicsMemorySize")]
     public double? GraphicsMemorySize { get; set; }
 
-    [MapTo("processor_count")]
+    [MapTo("processorCount")]
     public double? ProcessorCount { get; set; }
 
-    [MapTo("sparse_textures")]
+    [MapTo("sparseTextures")]
     public bool? SparseTextures { get; set; }
 
-    [MapTo("supports_3d_textures")]
-    public bool? Supports3dTextures { get; set; }
+    [MapTo("supports3DTextures")]
+    public bool? Supports3DTextures { get; set; }
 
-    [MapTo("supports_location_service")]
+    [MapTo("supportsLocationService")]
     public bool? SupportsLocationService { get; set; }
 
-    [MapTo("supports_shadows")]
+    [MapTo("supportsShadows")]
     public bool? SupportsShadows { get; set; }
 
-    [MapTo("supports_vibration")]
+    [MapTo("supportsVibration")]
     public bool? SupportsVibration { get; set; }
 
-    [MapTo("system_memory_size")]
+    [MapTo("systemMemorySize")]
     public double? SystemMemorySize { get; set; }
 
 }
 
-public class PlayerProfile_global_game_counters : EmbeddedObject {
+public class PlayerProfile_globalGameCounters : EmbeddedObject {
 
     [MapTo("energy")]
     public double? Energy { get; set; }
@@ -83,38 +84,24 @@ public class PlayerProfile_global_game_counters : EmbeddedObject {
 
 }
 
-public class PlayerProfile_locale : EmbeddedObject {
-
-    [MapTo("locale")]
-    public PlayerProfile_locale_locale Locale { get; set; }
-
-}
-
-public class PlayerProfile_locale_locale : EmbeddedObject {
-
-    [MapTo("region")]
-    public bool? Region { get; set; }
-
-}
-
 public class PlayerProfile_stats : EmbeddedObject {
 
-    [MapTo("characters_unlocked")]
+    [MapTo("charactersUnlocked")]
     public int? CharactersUnlocked { get; set; }
 
-    [MapTo("mvp_wins")]
+    [MapTo("mvpWins")]
     public int? MvpWins { get; set; }
 
-    [MapTo("player_level")]
+    [MapTo("playerLevel")]
     public int? PlayerLevel { get; set; }
 
-    [MapTo("total_collection_power")]
+    [MapTo("totalCollectionPower")]
     public int? TotalCollectionPower { get; set; }
 
-    [MapTo("total_game_time_days")]
+    [MapTo("totalGameTimeDays")]
     public int? TotalGameTimeDays { get; set; }
 
-    [MapTo("total_money_spent")]
+    [MapTo("totalMoneySpent")]
     public int? TotalMoneySpent { get; set; }
     
 }
