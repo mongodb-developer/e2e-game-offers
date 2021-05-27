@@ -17,7 +17,7 @@ public class PlayerRoster : RealmObject {
     public string PlayerId { get; set; }
 
     [MapTo("roster")]
-    public IList<PlayerRoster_roster> Roster { get; set; }
+    public IList<PlayerRoster_roster> Roster { get; }
 
 }
 

@@ -29,7 +29,7 @@ public class PlayerOffer : RealmObject {
     public double? PredictionScore { get; set; }
 
     [MapTo("price")]
-    public int? Price { get; set; }
+    public double? Price { get; set; }
 
     [MapTo("purchaseDt")]
     public DateTimeOffset? PurchaseDt { get; set; }

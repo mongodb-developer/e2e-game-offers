@@ -68,30 +68,30 @@ public class RealmController : MonoBehaviour {
 
     public PlayerRoster GetCurrentPlayerRoster() {
         var playerRoster = _realm.All<PlayerRoster>().Where(pr => pr.PlayerId == _email).FirstOrDefault();
-        if(playerRoster == null) {
-            playerRoster = new PlayerRoster {
-                PlayerId = "null@null.com",
-                Roster = new List<PlayerRoster_roster>()
-            };
-            playerRoster.Roster.Add(new PlayerRoster_roster {
-                CharacterId = 8,
-                Level = 1,
-                GearTier = 1,
-                Shards = 5,
-                RedStars = 0,
-                Stars = 2,
-                Abilities = 0
-            });
-            playerRoster.Roster.Add(new PlayerRoster_roster {
-                CharacterId = 4,
-                Level = 6,
-                GearTier = 2,
-                Shards = 3,
-                RedStars = 4,
-                Stars = 1,
-                Abilities = 5
-            });
-        }
+        // if(playerRoster == null) {
+        //     playerRoster = new PlayerRoster {
+        //         PlayerId = "null@null.com",
+        //         Roster = new List<PlayerRoster_roster>()
+        //     };
+        //     playerRoster.Roster.Add(new PlayerRoster_roster {
+        //         CharacterId = 8,
+        //         Level = 1,
+        //         GearTier = 1,
+        //         Shards = 5,
+        //         RedStars = 0,
+        //         Stars = 2,
+        //         Abilities = 0
+        //     });
+        //     playerRoster.Roster.Add(new PlayerRoster_roster {
+        //         CharacterId = 4,
+        //         Level = 6,
+        //         GearTier = 2,
+        //         Shards = 3,
+        //         RedStars = 4,
+        //         Stars = 1,
+        //         Abilities = 5
+        //     });
+        // }
         return playerRoster;
     }
 
