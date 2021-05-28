@@ -49,10 +49,10 @@ public class PlayerProfile_deviceBenchmark : EmbeddedObject {
     public string DeviceModel { get; set; }
 
     [MapTo("graphicsMemorySize")]
-    public double? GraphicsMemorySize { get; set; }
+    public int? GraphicsMemorySize { get; set; }
 
     [MapTo("processorCount")]
-    public double? ProcessorCount { get; set; }
+    public int? ProcessorCount { get; set; }
 
     [MapTo("sparseTextures")]
     public bool? SparseTextures { get; set; }
@@ -70,17 +70,17 @@ public class PlayerProfile_deviceBenchmark : EmbeddedObject {
     public bool? SupportsVibration { get; set; }
 
     [MapTo("systemMemorySize")]
-    public double? SystemMemorySize { get; set; }
+    public int? SystemMemorySize { get; set; }
 
 }
 
 public class PlayerProfile_globalGameCounters : EmbeddedObject {
 
     [MapTo("energy")]
-    public double? Energy { get; set; }
+    public int? Energy { get; set; }
 
     [MapTo("gold")]
-    public double? Gold { get; set; }
+    public int? Gold { get; set; }
 
 }
 
@@ -102,6 +102,6 @@ public class PlayerProfile_stats : EmbeddedObject {
     public int? TotalGameTimeDays { get; set; }
 
     [MapTo("totalMoneySpent")]
-    public int? TotalMoneySpent { get; set; }
-    
+    public double? TotalMoneySpent { get; set; }
+
 }
