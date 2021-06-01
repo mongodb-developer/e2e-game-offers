@@ -16,8 +16,9 @@ public class RealmController : MonoBehaviour {
     private Realm _realm;
     private App _realmApp;
     private User _realmUser;
-    private PlayerProfile _playerProfile;
+    //private PlayerProfile _playerProfile;
     private string _email;
+    //private Token _realmToken;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -95,12 +96,21 @@ public class RealmController : MonoBehaviour {
         return playerRoster;
     }
 
+    public List<PlayerOffer> GetCurrentPlayerOffers() {
+        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email).ToList();
+        return playerOffers;
+    }
+
     public PlayerProfile GetOtherPlayerProfile(string email) {
         return _realm.All<PlayerProfile>().Where(pp => pp.PlayerId == email).FirstOrDefault();
     }
 
     public PlayerRoster GetOtherPlayerRoster(string email) {
         return _realm.All<PlayerRoster>().Where(pr => pr.PlayerId == email).FirstOrDefault();
+    }
+
+    public PlayerOffer GetPlayerOffer(ObjectId offerId) {
+        return _realm.Find<PlayerOffer>(offerId);
     }
 
 }
