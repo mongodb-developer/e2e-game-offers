@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Realms;
 using Realms.Sync;
 using MongoDB.Bson;
+using System;
 
 public class RealmController : MonoBehaviour {
 
@@ -97,7 +98,7 @@ public class RealmController : MonoBehaviour {
     }
 
     public List<PlayerOffer> GetCurrentPlayerOffers() {
-        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email).ToList();
+        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).ToList();
         return playerOffers;
     }
 
@@ -111,6 +112,14 @@ public class RealmController : MonoBehaviour {
 
     public PlayerOffer GetPlayerOffer(ObjectId offerId) {
         return _realm.Find<PlayerOffer>(offerId);
+    }
+
+    public bool PurchasePlayerOffer(PlayerOffer offer) {
+        _realm.Write(() => {
+            offer.IsPurchased = true;
+            offer.PurchaseDt = DateTimeOffset.Now;
+        });
+        return (bool)offer.IsPurchased;
     }
 
 }

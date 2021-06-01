@@ -10,6 +10,7 @@ public class SpecialOfferButton : MonoBehaviour {
     public int offerNumber;
 
     private PlayerOffer _playerOffer;
+    private Button _button;
     private Text _buttonText;
 
     void OnEnable() {
@@ -21,10 +22,18 @@ public class SpecialOfferButton : MonoBehaviour {
     }
 
     void Start() {
+        _button = GetComponent<Button>();
         _buttonText = GetComponentInChildren<Text>();
+        _button.onClick.AddListener(PurchaseOffer);
     }
 
     void Update() {
         _buttonText.text = "Shards: " + _playerOffer.Shards + "\n" + "Price: " + _playerOffer.Price;
     }
+
+    void PurchaseOffer() {
+        RealmController.Instance.PurchasePlayerOffer(_playerOffer);
+        gameObject.SetActive(false);
+    }
+
 }
