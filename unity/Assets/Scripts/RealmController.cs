@@ -17,9 +17,7 @@ public class RealmController : MonoBehaviour {
     private Realm _realm;
     private App _realmApp;
     private User _realmUser;
-    //private PlayerProfile _playerProfile;
     private string _email;
-    //private Token _realmToken;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -57,43 +55,11 @@ public class RealmController : MonoBehaviour {
 
     public PlayerProfile GetCurrentPlayerProfile() {
         var playerProfile = _realm.All<PlayerProfile>().Where(pp => pp.PlayerId == _email).FirstOrDefault();
-        if(playerProfile == null) {
-            playerProfile = new PlayerProfile {
-                PlayerId = "null@null.com",
-                Stats = new PlayerProfile_stats {
-                    PlayerLevel = 40
-                }
-            };
-        }
         return playerProfile;
     }
 
     public PlayerRoster GetCurrentPlayerRoster() {
         var playerRoster = _realm.All<PlayerRoster>().Where(pr => pr.PlayerId == _email).FirstOrDefault();
-        // if(playerRoster == null) {
-        //     playerRoster = new PlayerRoster {
-        //         PlayerId = "null@null.com",
-        //         Roster = new List<PlayerRoster_roster>()
-        //     };
-        //     playerRoster.Roster.Add(new PlayerRoster_roster {
-        //         CharacterId = 8,
-        //         Level = 1,
-        //         GearTier = 1,
-        //         Shards = 5,
-        //         RedStars = 0,
-        //         Stars = 2,
-        //         Abilities = 0
-        //     });
-        //     playerRoster.Roster.Add(new PlayerRoster_roster {
-        //         CharacterId = 4,
-        //         Level = 6,
-        //         GearTier = 2,
-        //         Shards = 3,
-        //         RedStars = 4,
-        //         Stars = 1,
-        //         Abilities = 5
-        //     });
-        // }
         return playerRoster;
     }
 
@@ -120,6 +86,10 @@ public class RealmController : MonoBehaviour {
             offer.PurchaseDt = DateTimeOffset.Now;
         });
         return (bool)offer.IsPurchased;
+    }
+
+    public IDisposable ListenForOffers(NotificationCallbackDelegate<PlayerOffer> callback) {
+        return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).SubscribeForNotifications(callback);
     }
 
 }
