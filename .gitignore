@@ -2,6 +2,8 @@
 *.txt
 *.json
 
+# Misc folders
+archive/
 
 # No keys!
 *.pem
