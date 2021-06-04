@@ -18,6 +18,7 @@ public class RealmController : MonoBehaviour {
     private App _realmApp;
     private User _realmUser;
     private string _email;
+    private int _currentRosterPlayer;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -90,6 +91,14 @@ public class RealmController : MonoBehaviour {
 
     public IDisposable ListenForOffers(NotificationCallbackDelegate<PlayerOffer> callback) {
         return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).SubscribeForNotifications(callback);
+    }
+
+    public void SetCurrentRosterPlayer(int character) {
+        _currentRosterPlayer = character;
+    }
+
+    public int GetCurrentRosterPlayer() {
+        return _currentRosterPlayer;
     }
 
 }

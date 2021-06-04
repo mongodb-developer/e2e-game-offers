@@ -18,7 +18,7 @@ public class LoginController : MonoBehaviour {
 
     async public void Login() {
         if(await RealmController.Instance.Login(UsernameInput.text, PasswordInput.text) != "") {
-            SceneManager.LoadScene("PlayerInfoScene");
+            SceneManager.LoadScene("RosterScene");
         }
     }
 
