@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour {
         });
     }
 
-    void Update() { }
+    void Update() {
+        PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+    }
 
 }

@@ -28,12 +28,16 @@ public class SpecialOfferButton : MonoBehaviour {
     }
 
     void Update() {
-        _buttonText.text = "Shards: " + _playerOffer.Shards + "\n" + "Price: " + _playerOffer.Price;
+        if(_playerOffer != null && _playerOffer.IsValid) {
+            _buttonText.text = "Shards: " + _playerOffer.Shards + "\n" + "Price: " + _playerOffer.Price;
+        }
     }
 
     void PurchaseOffer() {
-        RealmController.Instance.PurchasePlayerOffer(_playerOffer);
-        gameObject.SetActive(false);
+        if(_playerOffer != null && _playerOffer.IsValid) {
+            RealmController.Instance.PurchasePlayerOffer(_playerOffer);
+            gameObject.SetActive(false);
+        }
     }
 
 }
