@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Realms;
 using Realms.Sync;
+using Realms.Sync.Exceptions;
 using MongoDB.Bson;
 using System;
 
@@ -38,11 +39,18 @@ public class RealmController : MonoBehaviour {
                 MetadataPersistenceMode = MetadataPersistenceMode.NotEncrypted
             });
             _realmUser = _realmApp.CurrentUser;
-            if(_realmUser == null) {
-                _realmUser = await _realmApp.LogInAsync(Credentials.EmailPassword(email, password));
-                _realm = await Realm.GetInstanceAsync(new SyncConfiguration(email, _realmUser));
-            } else {
-                _realm = Realm.GetInstance(new SyncConfiguration(email, _realmUser));
+            try {
+                if(_realmUser == null) {
+                    _realmUser = await _realmApp.LogInAsync(Credentials.EmailPassword(email, password));
+                    _realm = await Realm.GetInstanceAsync(new SyncConfiguration(email, _realmUser));
+                } else {
+                    _realm = Realm.GetInstance(new SyncConfiguration(email, _realmUser));
+                }
+            } catch (ClientResetException clientResetEx) {
+                if(_realm != null) {
+                    _realm.Dispose();
+                }
+                clientResetEx.InitiateClientReset();
             }
             _email = email;
             return _realmUser.Id;
