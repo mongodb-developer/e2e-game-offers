@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using MongoDB.Bson;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
     public Text PlayerIdText;
     public Text PlayerLevelText;
     public Text PlayerRosterText;
+    public Button backButton;
 
     public GameObject specialOffer;
 
@@ -50,10 +52,15 @@ public class GameController : MonoBehaviour {
                 }
             }
         });
+        backButton.onClick.AddListener(BackToRoster);
     }
 
     void Update() {
         PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+    }
+
+    void BackToRoster() {
+        SceneManager.LoadScene("RosterScene");
     }
 
 }
