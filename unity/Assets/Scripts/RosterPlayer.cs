@@ -10,7 +10,7 @@ public class RosterPlayer : MonoBehaviour {
 
     private SpriteRenderer _spriteRenderer;
 
-    void Awake() {
+    void Start() {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = avatars[characterId];
     }
