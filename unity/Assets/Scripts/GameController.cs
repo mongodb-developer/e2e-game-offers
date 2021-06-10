@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
-    public Text PlayerIdText;
-    public Text PlayerLevelText;
-    public Text PlayerRosterText;
+    public Text playerAbilitiesText;
+    public Text playerLevelText;
+    public Text playerGearTierText;
+    public Text playerCharacterText;
     public Text shardsText;
     public Button backButton;
 
@@ -28,10 +29,13 @@ public class GameController : MonoBehaviour {
     }
 
     void Start() {
-        PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
-        PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+        //PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
+        playerLevelText.text = "LEVEL: " + pd.Level;
+        playerGearTierText.text = "GEAR TIER: " + pd.GearTier;
+        playerAbilitiesText.text = "ABILITIES: " + pd.Abilities;
+        playerCharacterText.text = "CHARACTER: " + GetCharacterName((int)pd.CharacterId);
         _specialOffers = RealmController.Instance.GetCurrentPlayerOffers();
         for(int i = 0; i < _specialOffers.Count; i++) {
             var tmpOffer = Instantiate(specialOffer);
@@ -55,11 +59,26 @@ public class GameController : MonoBehaviour {
     }
 
     void Update() {
-        PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+        //playerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
     }
 
     void BackToRoster() {
         SceneManager.LoadScene("RosterScene");
+    }
+
+    string GetCharacterName(int characterId) {
+        switch(characterId) {
+            case 1:
+                return "Run and Gun Nic";
+            case 8:
+                return "Retro Digital Killer";
+            case 9:
+                return "CyberWizard Luce of The Land or Noir";
+            case 10:
+                return "Bizarro Superita";
+            default:
+                return "Unknown [" + characterId.ToString() + "]";
+        }
     }
 
 }
