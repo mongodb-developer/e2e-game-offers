@@ -73,7 +73,8 @@ public class RealmController : MonoBehaviour {
     }
 
     public List<PlayerOffer> GetCurrentPlayerOffers() {
-        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).ToList();
+        int? characterId = _currentRosterPlayer + 1;
+        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false && po.CharacterId == characterId).ToList();
         return playerOffers;
     }
 
@@ -98,7 +99,8 @@ public class RealmController : MonoBehaviour {
     }
 
     public IDisposable ListenForOffers(NotificationCallbackDelegate<PlayerOffer> callback) {
-        return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).SubscribeForNotifications(callback);
+        int? characterId = _currentRosterPlayer + 1;
+        return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false && po.CharacterId == characterId).SubscribeForNotifications(callback);
     }
 
     public void SetCurrentRosterPlayer(int character) {
@@ -111,7 +113,8 @@ public class RealmController : MonoBehaviour {
 
     public PlayerRoster_roster GetCurrentRosterPlayerDetails() {
         var roster = GetCurrentPlayerRoster();
-        return roster.Roster.Where(p => p.CharacterId == (_currentRosterPlayer + 1)).FirstOrDefault();
+        int? characterId = _currentRosterPlayer + 1;
+        return roster.Roster.Where(p => p.CharacterId == characterId).FirstOrDefault();
     }
 
 }
