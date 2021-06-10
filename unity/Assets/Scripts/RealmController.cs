@@ -109,4 +109,9 @@ public class RealmController : MonoBehaviour {
         return _currentRosterPlayer;
     }
 
+    public PlayerRoster_roster GetCurrentRosterPlayerDetails() {
+        var roster = GetCurrentPlayerRoster();
+        return roster.Roster.Where(p => p.CharacterId == (_currentRosterPlayer + 1)).FirstOrDefault();
+    }
+
 }

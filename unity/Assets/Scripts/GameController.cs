@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
     public Text PlayerIdText;
     public Text PlayerLevelText;
     public Text PlayerRosterText;
+    public Text shardsText;
     public Button backButton;
 
     public GameObject specialOffer;
@@ -29,10 +30,8 @@ public class GameController : MonoBehaviour {
     void Start() {
         PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
         PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
-        PlayerRosterText.text = "ROSTER: \n";
-        foreach(var rosterItem in RealmController.Instance.GetCurrentPlayerRoster().Roster) {
-            PlayerRosterText.text += rosterItem.CharacterId + " / " + rosterItem.Level + " / " + rosterItem.Shards + " / " + rosterItem.Stars + "\n";
-        }
+        PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
+        shardsText.text = "x" + pd.Shards;
         _specialOffers = RealmController.Instance.GetCurrentPlayerOffers();
         for(int i = 0; i < _specialOffers.Count; i++) {
             var tmpOffer = Instantiate(specialOffer);

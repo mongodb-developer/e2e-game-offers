@@ -414,6 +414,7 @@ MonoBehaviour:
   PlayerIdText: {fileID: 1485730683}
   PlayerLevelText: {fileID: 1269571351}
   PlayerRosterText: {fileID: 222929032}
+  shardsText: {fileID: 365247439}
   backButton: {fileID: 1064097666}
   specialOffer: {fileID: 907369645857761991, guid: 6c2ea43c264d24a1d9dcde79dde4bae2, type: 3}
 --- !u!1 &1032581033
