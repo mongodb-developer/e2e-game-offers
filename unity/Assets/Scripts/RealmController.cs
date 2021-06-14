@@ -117,4 +117,9 @@ public class RealmController : MonoBehaviour {
         return roster.Roster.Where(p => p.CharacterId == characterId).FirstOrDefault();
     }
 
+    public List<PlayerActivityLast7Day> GetPlayerActivityLast7Day() {
+        int? characterId = _currentRosterPlayer + 1;
+        return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).ToList();
+    }
+
 }

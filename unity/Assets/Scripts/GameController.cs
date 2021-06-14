@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
     public Text playerGearTierText;
     public Text playerCharacterText;
     public Text shardsText;
+    public Text playerActivityText;
     public Button backButton;
 
     public GameObject specialOffer;
@@ -35,6 +36,10 @@ public class GameController : MonoBehaviour {
         playerGearTierText.text = "GEAR TIER: " + pd.GearTier;
         playerAbilitiesText.text = "ABILITIES: " + pd.Abilities;
         playerCharacterText.text = "CHARACTER: " + GetCharacterName((int)pd.CharacterId);
+        var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
+        foreach(var activity in playerActivity) {
+            playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
+        }
         _specialOffers = RealmController.Instance.GetCurrentPlayerOffers();
         for(int i = 0; i < _specialOffers.Count; i++) {
             var tmpOffer = Instantiate(specialOffer);
