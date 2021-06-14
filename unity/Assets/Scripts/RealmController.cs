@@ -8,6 +8,7 @@ using Realms.Sync;
 using Realms.Sync.Exceptions;
 using MongoDB.Bson;
 using System;
+using UnityEngine.Networking;
 
 public class RealmController : MonoBehaviour {
 
@@ -73,7 +74,8 @@ public class RealmController : MonoBehaviour {
     }
 
     public List<PlayerOffer> GetCurrentPlayerOffers() {
-        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).ToList();
+        int? characterId = _currentRosterPlayer + 1;
+        var playerOffers = _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false && po.CharacterId == characterId).ToList();
         return playerOffers;
     }
 
@@ -98,7 +100,8 @@ public class RealmController : MonoBehaviour {
     }
 
     public IDisposable ListenForOffers(NotificationCallbackDelegate<PlayerOffer> callback) {
-        return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false).SubscribeForNotifications(callback);
+        int? characterId = _currentRosterPlayer + 1;
+        return _realm.All<PlayerOffer>().Where(po => po.PlayerId == _email && po.IsPurchased == false && po.CharacterId == characterId).SubscribeForNotifications(callback);
     }
 
     public void SetCurrentRosterPlayer(int character) {
@@ -107,6 +110,36 @@ public class RealmController : MonoBehaviour {
 
     public int GetCurrentRosterPlayer() {
         return _currentRosterPlayer;
+    }
+
+    public PlayerRoster_roster GetCurrentRosterPlayerDetails() {
+        var roster = GetCurrentPlayerRoster();
+        int? characterId = _currentRosterPlayer + 1;
+        return roster.Roster.Where(p => p.CharacterId == characterId).FirstOrDefault();
+    }
+
+    public List<PlayerActivityLast7Day> GetPlayerActivityLast7Day() {
+        int? characterId = _currentRosterPlayer + 1;
+        return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).ToList();
+    }
+
+    IEnumerator AttachActivity(string data, System.Action<bool> callback = null) {
+        using (UnityWebRequest request = new UnityWebRequest("https://URLHERE", "POST")) {
+            request.SetRequestHeader("Content-Type", "application/json");
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            yield return request.SendWebRequest();
+            if(request.result == UnityWebRequest.Result.ConnectionError) {
+                if(callback != null) {
+                    callback.Invoke(false);
+                }
+            } else {
+                if(callback != null) {
+                    callback.Invoke(request.downloadHandler.text != "{}");
+                }
+            }
+        }
     }
 
 }

@@ -8,15 +8,10 @@ public class PlayerAvatar : MonoBehaviour {
 
     private SpriteRenderer _spriteRenderer;
 
-    // Start is called before the first frame update
     void Awake() {
+        Debug.Log("AWAKE: PlayerAvatar");
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = avatar[RealmController.Instance.GetCurrentRosterPlayer()];
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

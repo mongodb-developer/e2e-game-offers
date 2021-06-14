@@ -8,9 +8,12 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
-    public Text PlayerIdText;
-    public Text PlayerLevelText;
-    public Text PlayerRosterText;
+    public Text playerAbilitiesText;
+    public Text playerLevelText;
+    public Text playerGearTierText;
+    public Text playerCharacterText;
+    public Text shardsText;
+    public Text playerActivityText;
     public Button backButton;
 
     public GameObject specialOffer;
@@ -27,11 +30,16 @@ public class GameController : MonoBehaviour {
     }
 
     void Start() {
-        PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
-        PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
-        PlayerRosterText.text = "ROSTER: \n";
-        foreach(var rosterItem in RealmController.Instance.GetCurrentPlayerRoster().Roster) {
-            PlayerRosterText.text += rosterItem.CharacterId + " / " + rosterItem.Level + " / " + rosterItem.Shards + " / " + rosterItem.Stars + "\n";
+        Debug.Log("START: GameController");
+        PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
+        shardsText.text = "x" + pd.Shards;
+        playerLevelText.text = "LEVEL: " + pd.Level;
+        playerGearTierText.text = "GEAR TIER: " + pd.GearTier;
+        playerAbilitiesText.text = "ABILITIES: " + pd.Abilities;
+        playerCharacterText.text = "CHARACTER: " + GetCharacterName((int)pd.CharacterId);
+        var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
+        foreach(var activity in playerActivity) {
+            playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
         }
         _specialOffers = RealmController.Instance.GetCurrentPlayerOffers();
         for(int i = 0; i < _specialOffers.Count; i++) {
@@ -56,11 +64,30 @@ public class GameController : MonoBehaviour {
     }
 
     void Update() {
-        PlayerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+        var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
+        playerActivityText.text = "LAST 7 DAY ACTIVITY:\n";
+        foreach (var activity in playerActivity) {
+            playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
+        }
     }
 
     void BackToRoster() {
         SceneManager.LoadScene("RosterScene");
+    }
+
+    string GetCharacterName(int characterId) {
+        switch(characterId) {
+            case 1:
+                return "Run and Gun Nic";
+            case 8:
+                return "Retro Digital Killer";
+            case 9:
+                return "CyberWizard Luce of The Land or Noir";
+            case 10:
+                return "Bizarro Superita";
+            default:
+                return "Unknown [" + characterId.ToString() + "]";
+        }
     }
 
 }
