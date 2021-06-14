@@ -11,6 +11,7 @@ public class RosterPlayer : MonoBehaviour {
     private SpriteRenderer _spriteRenderer;
 
     void Start() {
+        Debug.Log("START: RosterPlayer");
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = avatars[characterId];
     }

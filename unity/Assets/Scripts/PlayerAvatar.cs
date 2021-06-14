@@ -9,6 +9,7 @@ public class PlayerAvatar : MonoBehaviour {
     private SpriteRenderer _spriteRenderer;
 
     void Awake() {
+        Debug.Log("AWAKE: PlayerAvatar");
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = avatar[RealmController.Instance.GetCurrentRosterPlayer()];
     }

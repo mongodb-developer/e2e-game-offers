@@ -16,6 +16,7 @@ public class RosterController : MonoBehaviour {
     private PlayerProfile _playerProfile;
 
     void Awake() {
+        Debug.Log("AWAKE: RosterController");
         _playerProfile = RealmController.Instance.GetCurrentPlayerProfile();
         _playerRoster = RealmController.Instance.GetCurrentPlayerRoster();
         playerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";

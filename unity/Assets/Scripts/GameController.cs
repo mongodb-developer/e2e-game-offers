@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour {
     }
 
     void Start() {
+        Debug.Log("START: GameController");
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
         playerLevelText.text = "LEVEL: " + pd.Level;
@@ -63,7 +64,11 @@ public class GameController : MonoBehaviour {
     }
 
     void Update() {
-        //playerLevelText.text = "LEVEL: " + RealmController.Instance.GetCurrentPlayerProfile().Stats.PlayerLevel;
+        var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
+        playerActivityText.text = "LAST 7 DAY ACTIVITY:\n";
+        foreach (var activity in playerActivity) {
+            playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
+        }
     }
 
     void BackToRoster() {

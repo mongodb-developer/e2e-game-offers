@@ -8,6 +8,7 @@ using Realms.Sync;
 using Realms.Sync.Exceptions;
 using MongoDB.Bson;
 using System;
+using UnityEngine.Networking;
 
 public class RealmController : MonoBehaviour {
 
@@ -120,6 +121,25 @@ public class RealmController : MonoBehaviour {
     public List<PlayerActivityLast7Day> GetPlayerActivityLast7Day() {
         int? characterId = _currentRosterPlayer + 1;
         return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).ToList();
+    }
+
+    IEnumerator AttachActivity(string data, System.Action<bool> callback = null) {
+        using (UnityWebRequest request = new UnityWebRequest("https://URLHERE", "POST")) {
+            request.SetRequestHeader("Content-Type", "application/json");
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            yield return request.SendWebRequest();
+            if(request.result == UnityWebRequest.Result.ConnectionError) {
+                if(callback != null) {
+                    callback.Invoke(false);
+                }
+            } else {
+                if(callback != null) {
+                    callback.Invoke(request.downloadHandler.text != "{}");
+                }
+            }
+        }
     }
 
 }
