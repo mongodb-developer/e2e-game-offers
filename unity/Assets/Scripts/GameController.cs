@@ -29,7 +29,6 @@ public class GameController : MonoBehaviour {
     }
 
     void Start() {
-        //PlayerIdText.text = "PLAYER: " + RealmController.Instance.GetCurrentPlayerProfile().PlayerId + " [" + RealmController.Instance.GetAuthId() + "]";
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
         playerLevelText.text = "LEVEL: " + pd.Level;
