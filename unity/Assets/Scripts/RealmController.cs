@@ -126,7 +126,7 @@ public class RealmController : MonoBehaviour {
     public async Task<BsonValue> AttachActivity(string equipmentType, int amount) {
         var document = new BsonDocument {
             { "playerId", _email },
-            { "characterId", _currentRosterPlayer },
+            { "characterId", (_currentRosterPlayer + 1) },
             { "equipmentType", equipmentType },
             { "amount", amount }
         };
