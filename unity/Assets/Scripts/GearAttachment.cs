@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GearAttachment : MonoBehaviour {
 
@@ -12,8 +13,13 @@ public class GearAttachment : MonoBehaviour {
 
     async void OnMouseDown() {
         Debug.Log("ONMOUSEDOWN: GearAttachment");
-        var response = await RealmController.Instance.AttachActivity(equipmentType, 1);
-        Debug.Log(response);
+        string[] equipmentTypes = { "shards", "gear", "level", "abilities" };
+        if(Array.IndexOf(equipmentTypes, equipmentType) >= 0) {
+            var response = await RealmController.Instance.AttachActivity(equipmentType, 1);
+            Debug.Log(response);
+        } else {
+            Debug.Log("Invalid Equipment Type");
+        }
     }
 
 }

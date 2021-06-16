@@ -133,23 +133,4 @@ public class RealmController : MonoBehaviour {
         return await _realmUser.Functions.CallAsync("funcAddActivity", document);
     }
 
-    IEnumerator AttachActivity(string data, System.Action<bool> callback = null) {
-        using (UnityWebRequest request = new UnityWebRequest("https://URLHERE", "POST")) {
-            request.SetRequestHeader("Content-Type", "application/json");
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
-            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-            yield return request.SendWebRequest();
-            if(request.result == UnityWebRequest.Result.ConnectionError) {
-                if(callback != null) {
-                    callback.Invoke(false);
-                }
-            } else {
-                if(callback != null) {
-                    callback.Invoke(request.downloadHandler.text != "{}");
-                }
-            }
-        }
-    }
-
 }
