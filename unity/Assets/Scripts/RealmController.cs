@@ -123,6 +123,16 @@ public class RealmController : MonoBehaviour {
         return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).ToList();
     }
 
+    public async Task<BsonValue> AttachActivity(string equipmentType, int amount) {
+        var document = new BsonDocument {
+            { "playerId", _email },
+            { "characterId", _currentRosterPlayer },
+            { "equipmentType", equipmentType },
+            { "amount", amount }
+        };
+        return await _realmUser.Functions.CallAsync("funcAddActivity", document);
+    }
+
     IEnumerator AttachActivity(string data, System.Action<bool> callback = null) {
         using (UnityWebRequest request = new UnityWebRequest("https://URLHERE", "POST")) {
             request.SetRequestHeader("Content-Type", "application/json");
