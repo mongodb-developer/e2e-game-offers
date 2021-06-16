@@ -15,7 +15,7 @@ public class GearAttachment : MonoBehaviour {
         Debug.Log("ONMOUSEDOWN: GearAttachment");
         string[] equipmentTypes = { "shards", "gear", "level", "abilities" };
         if(Array.IndexOf(equipmentTypes, equipmentType) >= 0) {
-            var response = await RealmController.Instance.AttachActivity(equipmentType, 1);
+            var response = await RealmController.Instance.AttachActivity(equipmentType, 5);
             Debug.Log(response);
         } else {
             Debug.Log("Invalid Equipment Type");
