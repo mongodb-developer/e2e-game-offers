@@ -179,7 +179,7 @@
       "url": "https://packages.unity.com"
     },
     "io.realm.unity-bundled": {
-      "version": "file:/Users/nicolas.raboy/Desktop/e2e-game-offers/unity/io.realm.unity-bundled-10.2.0-PR-2331.11.tgz",
+      "version": "file:/Users/nicolas.raboy/Desktop/e2e-game-offers/unity/io.realm.unity-bundled-10.2.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
