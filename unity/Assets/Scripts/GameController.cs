@@ -80,7 +80,7 @@ public class GameController : MonoBehaviour {
             case 1:
                 return "Run and Gun Nic";
             case 2:
-                return "That One Dude Sig";
+                return "Siggo, the Swinging Blade Outcast";
             case 8:
                 return "Crazy Joe";
             case 9:
