@@ -33,9 +33,9 @@ public class GameController : MonoBehaviour {
         Debug.Log("START: GameController");
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
-        playerLevelText.text = "LEVEL: " + pd.Level;
-        playerGearTierText.text = "GEAR TIER: " + pd.GearTier;
-        playerAbilitiesText.text = "ABILITIES: " + pd.Abilities;
+        playerLevelText.text = "x" + pd.Level;
+        playerGearTierText.text = "x" + pd.GearTier;
+        playerAbilitiesText.text = "x" + pd.Abilities;
         playerCharacterText.text = "CHARACTER: " + GetCharacterName((int)pd.CharacterId);
         var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
         foreach(var activity in playerActivity) {
