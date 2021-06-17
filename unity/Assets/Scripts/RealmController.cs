@@ -39,11 +39,12 @@ public class RealmController : MonoBehaviour {
             _realmApp = App.Create(new AppConfiguration(RealmAppId) {
                 MetadataPersistenceMode = MetadataPersistenceMode.NotEncrypted
             });
-            _realmUser = _realmApp.CurrentUser;
+            //_realmUser = _realmApp.CurrentUser;
             try {
                 if(_realmUser == null) {
                     _realmUser = await _realmApp.LogInAsync(Credentials.EmailPassword(email, password));
                     _realm = await Realm.GetInstanceAsync(new SyncConfiguration(email, _realmUser));
+                    await _realm.GetSession().WaitForDownloadAsync();
                 } else {
                     _realm = Realm.GetInstance(new SyncConfiguration(email, _realmUser));
                 }

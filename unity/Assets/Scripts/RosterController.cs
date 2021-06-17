@@ -25,8 +25,8 @@ public class RosterController : MonoBehaviour {
         int colPos = 0, rowPos = 0;
         for(int i = 0; i < _playerRoster.Roster.Count; i++) {
             var tmpRosterItem = Instantiate(rosterPlayer);
-            tmpRosterItem.transform.position = new Vector3(-7.0f + (colPos * 3.5f), 1.5f + (rowPos * -4.0f), 0.0f);
-            if(colPos == 4) {
+            tmpRosterItem.transform.position = new Vector3(-7.25f + (colPos * 2.9f), 1.5f + (rowPos * -3.5f), 0.0f);
+            if(colPos == 5) {
                 rowPos++;
                 colPos = 0;
             } else {
