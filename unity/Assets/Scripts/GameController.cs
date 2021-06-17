@@ -79,11 +79,15 @@ public class GameController : MonoBehaviour {
         switch(characterId) {
             case 1:
                 return "Run and Gun Nic";
+            case 2:
+                return "That One Dude Sig";
             case 8:
-                return "Retro Digital Killer";
+                return "Crazy Joe";
             case 9:
-                return "CyberWizard Luce of The Land or Noir";
+                return "Retro Digital Killer";
             case 10:
+                return "CyberWizard Luce of The Land or Noir";
+            case 11:
                 return "Bizarro Superita";
             default:
                 return "Unknown [" + characterId.ToString() + "]";
