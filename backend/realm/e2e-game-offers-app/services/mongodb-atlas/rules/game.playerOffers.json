@@ -1,0 +1,50 @@
+{
+    "collection": "playerOffers",
+    "database": "game",
+    "id": "60aec25e62bb6668c6342bb6",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "insert": true,
+            "delete": true,
+            "search": true,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "characterId": {
+                "bsonType": "int"
+            },
+            "isPurchased": {
+                "bsonType": "bool"
+            },
+            "offerId": {
+                "bsonType": "int"
+            },
+            "playerId": {
+                "bsonType": "string"
+            },
+            "predictionDt": {
+                "bsonType": "date"
+            },
+            "predictionScore": {
+                "bsonType": "double"
+            },
+            "price": {
+                "bsonType": "double"
+            },
+            "purchaseDt": {
+                "bsonType": "date"
+            },
+            "shards": {
+                "bsonType": "int"
+            }
+        },
+        "title": "PlayerOffer"
+    }
+}

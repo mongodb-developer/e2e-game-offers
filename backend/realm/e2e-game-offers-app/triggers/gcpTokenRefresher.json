@@ -1,0 +1,10 @@
+{
+    "id": "60ba56f2142ae90fa7236078",
+    "name": "gcpTokenRefresher",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "*/30 * * * *"
+    },
+    "function_name": "tokenRefresher",
+    "disabled": false
+}

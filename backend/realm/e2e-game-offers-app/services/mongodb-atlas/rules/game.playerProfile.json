@@ -1,0 +1,110 @@
+{
+    "collection": "playerProfile",
+    "database": "game",
+    "id": "60abee8fba6d40c84db754a7",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "insert": true,
+            "delete": true,
+            "search": true,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "avatarId": {
+                "bsonType": "int"
+            },
+            "deviceBenchmark": {
+                "bsonType": "object",
+                "properties": {
+                    "accelerometer": {
+                        "bsonType": "bool"
+                    },
+                    "deviceModel": {
+                        "bsonType": "string"
+                    },
+                    "graphicsMemorySize": {
+                        "bsonType": "int"
+                    },
+                    "processorCount": {
+                        "bsonType": "int"
+                    },
+                    "sparseTextures": {
+                        "bsonType": "bool"
+                    },
+                    "supports3DTextures": {
+                        "bsonType": "bool"
+                    },
+                    "supportsLocationService": {
+                        "bsonType": "bool"
+                    },
+                    "supportsShadows": {
+                        "bsonType": "bool"
+                    },
+                    "supportsVibration": {
+                        "bsonType": "bool"
+                    },
+                    "systemMemorySize": {
+                        "bsonType": "int"
+                    }
+                }
+            },
+            "geo": {
+                "bsonType": "string"
+            },
+            "globalGameCounters": {
+                "bsonType": "object",
+                "properties": {
+                    "energy": {
+                        "bsonType": "int"
+                    },
+                    "gold": {
+                        "bsonType": "int"
+                    }
+                }
+            },
+            "lastLoginDt": {
+                "bsonType": "date"
+            },
+            "locale": {
+                "bsonType": "string"
+            },
+            "playerId": {
+                "bsonType": "string"
+            },
+            "signUpDt": {
+                "bsonType": "date"
+            },
+            "stats": {
+                "bsonType": "object",
+                "properties": {
+                    "charactersUnlocked": {
+                        "bsonType": "int"
+                    },
+                    "mvpWins": {
+                        "bsonType": "int"
+                    },
+                    "playerLevel": {
+                        "bsonType": "int"
+                    },
+                    "totalCollectionPower": {
+                        "bsonType": "int"
+                    },
+                    "totalGameTimeDays": {
+                        "bsonType": "int"
+                    },
+                    "totalMoneySpent": {
+                        "bsonType": "double"
+                    }
+                }
+            }
+        },
+        "title": "PlayerProfile"
+    }
+}

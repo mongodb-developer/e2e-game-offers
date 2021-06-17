@@ -1,0 +1,47 @@
+{
+    "id": "60b0f4fde0692265eba4efc2",
+    "name": "trgPersonalizedOffersListener",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT",
+            "UPDATE",
+            "REPLACE"
+        ],
+        "database": "game",
+        "collection": "playerActivityForPersonalizedOffers",
+        "service_name": "mongodb-atlas",
+        "match": {
+            "fullDocument.isNextRankARedStar": true,
+            "fullDocument.shardsToNextRank": {
+                "$gte": {
+                    "$numberLong": "25"
+                },
+                "$lt": {
+                    "$numberLong": "100"
+                }
+            },
+            "fullDocument.totalEquipShardsLast7D": {
+                "$gte": {
+                    "$numberLong": "5"
+                }
+            },
+            "fullDocument.totalEquipsLast7D": {
+                "$gte": {
+                    "$numberLong": "6"
+                }
+            },
+            "fullDocument.totalPlayTimeLast7D": {
+                "$gte": {
+                    "$numberInt": "840"
+                }
+            }
+        },
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "function_name": "funcObtainPersonalizedOffers",
+    "disabled": false
+}

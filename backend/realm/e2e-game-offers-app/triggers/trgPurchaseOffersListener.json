@@ -1,0 +1,25 @@
+{
+    "id": "60c41eb2cf9bd57266d1e052",
+    "name": "trgPurchaseOffersListener",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE",
+            "REPLACE"
+        ],
+        "database": "game",
+        "collection": "playerOffers",
+        "service_name": "mongodb-atlas",
+        "match": {
+            "updateDescription.updatedFields": {
+                "isPurchased": true
+            }
+        },
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": false
+    },
+    "function_name": "funcPurchaseOffer",
+    "disabled": false
+}
