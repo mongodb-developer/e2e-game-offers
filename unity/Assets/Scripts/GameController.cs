@@ -33,9 +33,9 @@ public class GameController : MonoBehaviour {
         Debug.Log("START: GameController");
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
-        playerLevelText.text = "LEVEL: " + pd.Level;
-        playerGearTierText.text = "GEAR TIER: " + pd.GearTier;
-        playerAbilitiesText.text = "ABILITIES: " + pd.Abilities;
+        playerLevelText.text = "x" + pd.Level;
+        playerGearTierText.text = "x" + pd.GearTier;
+        playerAbilitiesText.text = "x" + pd.Abilities;
         playerCharacterText.text = "CHARACTER: " + GetCharacterName((int)pd.CharacterId);
         var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
         foreach(var activity in playerActivity) {
@@ -79,11 +79,15 @@ public class GameController : MonoBehaviour {
         switch(characterId) {
             case 1:
                 return "Run and Gun Nic";
+            case 2:
+                return "Siggo, the Swinging Blade Outcast";
             case 8:
-                return "Retro Digital Killer";
+                return "Crazy Joe";
             case 9:
-                return "CyberWizard Luce of The Land or Noir";
+                return "Retro Digital Killer";
             case 10:
+                return "CyberWizard Luce of The Land or Noir";
+            case 11:
                 return "Bizarro Superita";
             default:
                 return "Unknown [" + characterId.ToString() + "]";
