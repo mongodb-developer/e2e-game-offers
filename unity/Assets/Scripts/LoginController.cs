@@ -11,7 +11,7 @@ public class LoginController : MonoBehaviour {
     public Button LoginButton;
 
     void Start() {
-        UsernameInput.text = "boc@lomtabga.mq";
+        UsernameInput.text = "sig@leafsquad.com";
         PasswordInput.text = "password1234";
         LoginButton.onClick.AddListener(Login);
     }

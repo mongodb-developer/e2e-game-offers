@@ -69,6 +69,11 @@ public class GameController : MonoBehaviour {
         foreach (var activity in playerActivity) {
             playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
         }
+        PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
+        shardsText.text = "x" + pd.Shards;
+        playerLevelText.text = "x" + pd.Level;
+        playerGearTierText.text = "x" + pd.GearTier;
+        playerAbilitiesText.text = "x" + pd.Abilities;
     }
 
     void BackToRoster() {
