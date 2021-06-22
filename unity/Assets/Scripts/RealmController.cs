@@ -120,7 +120,7 @@ public class RealmController : MonoBehaviour {
 
     public List<PlayerActivityLast7Day> GetPlayerActivityLast7Day() {
         int? characterId = _currentRosterPlayer + 1;
-        return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).ToList();
+        return _realm.All<PlayerActivityLast7Day>().Where(pa => pa.PlayerId == _email && pa.CharacterId == characterId).OrderByDescending(pa => pa.ActivityDt).ToList();
     }
 
     public async Task<BsonValue> AttachActivity(string equipmentType, int amount) {

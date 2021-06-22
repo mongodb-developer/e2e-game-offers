@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour {
         var playerActivity = RealmController.Instance.GetPlayerActivityLast7Day();
         playerActivityText.text = "LAST 7 DAY ACTIVITY:\n";
         foreach (var activity in playerActivity) {
-            playerActivityText.text += activity.EquipmentType + ": " + activity.Amount + "\n";
+            playerActivityText.text += "[" + activity.ActivityDt?.ToString("yyyy-MM-dd HH:mm:ss") + "] " + activity.EquipmentType + ": " + activity.Amount + "\n";
         }
         PlayerRoster_roster pd = RealmController.Instance.GetCurrentRosterPlayerDetails();
         shardsText.text = "x" + pd.Shards;
