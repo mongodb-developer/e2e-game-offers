@@ -161,6 +161,11 @@ async function aggregateActivitiesForOffers(activity) {
     {
       "$unwind": { "path": "$roster" }
     }, {
+      "$match": {
+        "roster.characterId": activity.characterId
+      }
+    },
+    {
       "$addFields": {
         "isNextRankARedStar": {
           "$gt": ["$roster.redStars", "$roster.stars"]
@@ -213,7 +218,7 @@ async function aggregateActivitiesForOffers(activity) {
       "$addFields": {
         "playerId": "$_id.p",
         "characterId": "$_id.c",
-        "updatedDt": new Date()
+        "updateDt": new Date()
       }
     }, {
       "$unset": [
@@ -247,7 +252,7 @@ async function aggregateActivitiesForOffers(activity) {
       "$unset": "activity"
     }, {
       "$addFields": {
-        "updatedDt": new Date()
+        "updateDt": new Date()
       }
     }, {
       "$merge": {

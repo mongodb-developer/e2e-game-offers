@@ -22,7 +22,10 @@ exports = async function(changeEvent) {
       const updatedFields = updateDescription.updatedFields; // A document containing updated fields
       
       // Verify isPurchased==true and purchaseDt != null
-      if (!updatedFields.isPurchased) return; // Exit if the offer is not purchased
+      if (!updatedFields.isPurchased) {
+        console.log("OFFERED IS NOT PURCHASED!!");
+        return; // Exit if the offer is not purchased
+      }
       
       const client = context.services.get("mongodb-atlas");
       const db = client.db("game");
@@ -73,6 +76,16 @@ exports = async function(changeEvent) {
         console.log(`MOD: [playerRoster] ${JSON.stringify(modifiedRoster)}`);
         console.log(`MOD: [playerOffers] ${JSON.stringify(modifiedOffer)}`);
         console.log(`TX: COMMITTED`);
+        
+        let syntheticActivity = {
+          "playerId": purchasedOffer.playerId,
+          "characterId": BSON.Int32(purchasedOffer.characterId),
+          "equipmentType": "shards",
+          "amount": 0, // Synthetic activity to force re-calculation of Stars
+          "activityDt": new Date()
+        };
+        
+        await context.functions.execute("funcAddActivity", syntheticActivity); // Synthetic activity to force re-calculation of Star
         
       } catch (err) {
         // Step 5a: Handle errors with a transaction abort
