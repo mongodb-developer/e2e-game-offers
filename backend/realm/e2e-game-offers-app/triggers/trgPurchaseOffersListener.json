@@ -10,11 +10,7 @@
         "database": "game",
         "collection": "playerOffers",
         "service_name": "mongodb-atlas",
-        "match": {
-            "updateDescription.updatedFields": {
-                "isPurchased": true
-            }
-        },
+        "match": {},
         "project": {},
         "full_document": true,
         "full_document_before_change": false,
