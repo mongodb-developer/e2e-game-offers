@@ -86,6 +86,8 @@ public class GameController : MonoBehaviour {
                 return "Run and Gun Nic";
             case 2:
                 return "Siggo, the Swinging Blade Outcast";
+            case 7:
+                return "The Karen";
             case 8:
                 return "Crazy Joe";
             case 9:
