@@ -6,8 +6,8 @@ These are instructions for building and running the Leaf Squad game with Unity.
 
 ## Requirements
 
-- Unity 2021.2.0a17
-- Unity Realm SDK 10.2.0
+- Unity 2021.2.0b1
+- Unity Realm SDK 10.2.1
 - MongoDB Atlas with Realm Application Configured
 
 While this project might work with other versions of Unity, Realm, and Atlas, they have not been tested.
