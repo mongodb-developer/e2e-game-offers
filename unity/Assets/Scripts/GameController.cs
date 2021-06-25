@@ -96,6 +96,12 @@ public class GameController : MonoBehaviour {
                 return "CyberWizard Luce of The Land or Noir";
             case 11:
                 return "Bizarro Superita";
+            case 13:
+                return "Lucky Number 13";
+            case 15:
+                return "The Alchemist";
+            case 16:
+                return "Zoltar";
             default:
                 return "Unknown [" + characterId.ToString() + "]";
         }
