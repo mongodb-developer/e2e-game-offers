@@ -60,7 +60,7 @@ Here is the structure of the data that will be generated in our app and sent to 
 
 {
     "offerId":                      {"$choose": {"from": [1,2,3,4,5]}},
-    "characterId":                  {"$integer":{"min":1, "max":12}},
+    "characterId":                  {"$integer":{"min":1, "max":16}},
     "historicalSpend":              {"$integer":{"min":0, "max":200000}},
     "nextRankIsRedStar":            "$bool",
     "shardsToNextRank":             {"$integer":{"min":30, "max":50}},
@@ -86,7 +86,7 @@ Here is the structure of the data that will be generated in our app and sent to 
 
 thisdict = {
   "offerId": (1,5),
-  "characterId": (1,12),
+  "characterId": (1,16),
   "historicalSpend": (0,200000),
     "nextRankIsRedStar": (0,1),
     "shardsToNextRank": (30,50),
