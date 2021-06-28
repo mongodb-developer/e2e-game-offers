@@ -15,7 +15,7 @@ from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
 # Create MongoDB Atlas client object and necessary environment configuration
-atlasconn = "mongodb+srv://{}@game-main.maftg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&readConcernLevel=majority".format(
+atlasconn = "mongodb+srv://{}@game-main.maftg.mongodb.net/?retryWrites=true&w=majority&readConcernLevel=majority".format(
     os.environ['MDBGAMEUSER'])
 client = pymongo.MongoClient(atlasconn)
 db = client.game
