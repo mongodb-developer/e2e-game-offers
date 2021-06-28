@@ -18,7 +18,7 @@ from google.cloud.exceptions import NotFound
 atlasconn = "mongodb+srv://{}@game-main.maftg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&readConcernLevel=majority".format(
     os.environ['MDBGAMEUSER'])
 client = pymongo.MongoClient(atlasconn)
-db = client.beautest
+db = client.game
 collpo = db.playerOffers
 collppol = db.playerPersonalizedOffersLog
 
@@ -80,7 +80,7 @@ try:
             # by trade, so there's that...
             print('Change stream trigger matched...running query for stateAtInference...')
             query = collppol.find_one(
-                {'offers.0.insertedId': documentKeyObjId})
+                {'offers.insertedId': documentKeyObjId})
 
             print('Transforming data to ready for BiqQuery...')
             # Pull all values from the 'stateAtInference' key and then assign
