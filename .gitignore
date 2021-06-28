@@ -7,3 +7,6 @@ archive/
 
 # No keys!
 *.pem
+
+# Specific files
+watch_streams_orig.py
