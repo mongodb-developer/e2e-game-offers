@@ -40,7 +40,7 @@ try:
         '$match': {
             '$and': [
                 {'operationType': {'$in': ['update']}},
-                {'fullDocument.isPurchase': {'$eq': True}}
+                {'fullDocument.isPurchased': {'$eq': True}}
             ]
         }
     }]
