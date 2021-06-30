@@ -25,7 +25,6 @@ collppol = db.playerPersonalizedOffersLog
 
 # Create Google Cloud Big Query client object and necessary environment configuration
 bqclient = bigquery.Client()
-table_id = "e2e-game-offers.trainingDatasets.withoutPurchased_4clusters"
 
 # Open a watch on the database to capture change streams and then process change
 # and stream to GCP BigQuery
