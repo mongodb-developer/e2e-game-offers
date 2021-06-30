@@ -16,7 +16,7 @@
     "com.unity.toolchain.macos-x86_64-linux-x86_64": "0.1.21-preview",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.2",
-    "io.realm.unity": "file:/Users/nicolas.raboy/Desktop/e2e-game-offers/unity/io.realm.unity-10.2.1-PR-2467.766.tgz",
+    "io.realm.unity": "file:io.realm.unity-10.2.1-alpha.623.tgz",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

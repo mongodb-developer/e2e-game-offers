@@ -216,7 +216,7 @@
       "url": "https://packages.unity.com"
     },
     "io.realm.unity": {
-      "version": "file:/Users/nicolas.raboy/Desktop/e2e-game-offers/unity/io.realm.unity-10.2.1-PR-2467.766.tgz",
+      "version": "file:io.realm.unity-10.2.1-alpha.623.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
