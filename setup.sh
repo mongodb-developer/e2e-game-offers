@@ -9,6 +9,7 @@
 # Date          Version      Author         Notes                         #
 #-------------------------------------------------------------------------#
 # 06-03-2021    1.0          Roy Kiesler    Initial version               #
+# 07-03-2021    1.1          Roy Kiesler    Removed terraform check       #
 #-------------------------------------------------------------------------#
 
 #----------------------------------------------------------#
@@ -106,20 +107,6 @@ checkPrerequisites() {
         fi
     }
 
-    # test terraform
-    (type terraform >/dev/null 2>&1 && echo "✅ terraform") || {
-        echo >&2 "Terraform is not installed. Would you like to install it? [y/n]";
-        read INSTALL_TF
-        if [[ "$INSTALL_TF" == "y" || "$INSTALL_TF" == "Y" ]]; then
-            brew tap hashicorp/tap
-            brew install hashicorp/tap/terraform
-        else
-            echo >&2 "🛑 Please install Terraform and try again"
-            echo >&2 "   See https://learn.hashicorp.com/tutorials/terraform/install-cli"
-            exit 1
-        fi
-    }
-
     # test uuidgen
     (type uuidgen >/dev/null 2>&1 && echo "✅ uuidgen") || {
         echo >&2 "uuidgen is not installed. Would you like to install it? [y/n]";
@@ -141,9 +128,6 @@ checkPrerequisites() {
 # parameters specified in env.config.                      #
 #----------------------------------------------------------#
 createAtlasCluster() {
-    # configure mongocli
-    configureMongoCli
-
     # create the cluster
     echo "⛅️ Creating the cluster..."
     local cliResp=`mongocli atlas cluster create "${CLUSTER_NAME}" \
@@ -266,10 +250,14 @@ importRealmApp() {
 # cluster.                                                 #
 #----------------------------------------------------------#
 getClusterState() {
-    local currState=`mongocli atlas clusters describe "${CLUSTER_NAME}" | jq -r ".stateName"`
+    local cliResp=`mongocli atlas clusters describe "${CLUSTER_NAME}"`
     local rc=$?
     if [[ rc -eq 0 ]]; then
+        local currState=`echo $cliResp | jq -r ".stateName"`
         echo $currState
+    else
+        echo $cliResp
+        exit 1
     fi
 }
 
@@ -278,13 +266,13 @@ getClusterState() {
 # cluster.                                                 #
 #----------------------------------------------------------#
 isClusterPaused() {
-    local paused=`mongocli atlas clusters describe "${CLUSTER_NAME}" | jq -r ".paused"`
+    local cliResp=`mongocli atlas clusters describe "${CLUSTER_NAME}"`
     local rc=$?
-    echo $paused
     if [[ rc -eq 0 ]]; then
-        [ "$paused" == "true" ]
+        local paused=`echo $cliResp | jq -r ".paused"`
+        echo "$paused"
     else
-        false
+        echo "false"
     fi
 }
 
@@ -299,21 +287,25 @@ waitForClusterReady() {
 
     while [ $i -le $maxLoops ]
     do
-        local state=`getClusterState` >/dev/null 2>&1
-        if [[ "$state" == "IDLE" ]];
-        then
+        # special case -- if cluster is deleted before it's ready
+        if [[ `getClusterState` == "IDLE" ]]; then
             echo -e "\n✅ Cluster is ready\n"
             break
-        else
+        elif [[ `getClusterState` == "CREATING" ]]; then
             printf "."
+        elif [[ `getClusterState` == "REPAIRING" ]]; then
+            printf "."
+        elif [[ `getClusterState` == "DELETING" ]]; then
+            echo -e >&2 "\n🛑 Cluster is deleting -- exiting"
+            exit 1
+        else
+            # something else?
+            echo >&2 `getClusterState`
+            exit 1
         fi
         sleep 10
         ((i++))
     done
-    if [[ "$state" -ne "IDLE" ]];
-    then
-        echo "Cluster still not ready..."
-    fi
 }
 
 #----------------------------------------------------------#
@@ -321,15 +313,22 @@ waitForClusterReady() {
 #----------------------------------------------------------#
 checkPrerequisites
 
+# configure mongocli
+configureMongoCli
+
 # Check if cluster exists
-if [[ getClusterState ]]; then
+if [[ `getClusterState` == "IDLE" ]]; then
+    echo "exists -- check paused"
     # cluster already exists -- check if paused
-    if [[ `isClusterPaused` == 'true' ]]; then
+    if [[ `isClusterPaused` == "true" ]]; then
         echo "⏯ Cluster is paused -- resuming..."
         mongocli atlas clusters start "${CLUSTER_NAME}" >/dev/null 2>&1
     else
         echo "Cluster already exists"
     fi
+# special case, fall through -- waitForClusterReady will handle
+elif [[ `getClusterState` == "DELETING" ]]; then
+    echo
 else
     # Cluster does not exist yet -- create it
     createAtlasCluster
