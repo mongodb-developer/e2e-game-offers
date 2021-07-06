@@ -22,6 +22,6 @@ exports =async function(secretName, secretID, value, secretValue){
   encodeBodyAsJSON : true
   }
   return http.put(request).then(response=>{
-    return response});
+    return response.status});
 
 };
