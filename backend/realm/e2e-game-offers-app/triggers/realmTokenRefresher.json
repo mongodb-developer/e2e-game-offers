@@ -1,0 +1,10 @@
+{
+    "id": "60e32b9c66e3244ac97e5937",
+    "name": "realmTokenRefresher",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "*/20 * * * *"
+    },
+    "function_name": "realmToken",
+    "disabled": false
+}
