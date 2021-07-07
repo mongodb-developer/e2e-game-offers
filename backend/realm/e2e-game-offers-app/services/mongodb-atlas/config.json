@@ -4,7 +4,18 @@
     "type": "mongodb-atlas",
     "config": {
         "clusterName": "game-main",
-        "readPreference": "secondaryPreferred",
+        "readPreference": "primary",
+        "sync": {
+            "state": "enabled",
+            "partition": {
+                "key": "playerId",
+                "type": "string",
+                "permissions": {
+                    "read": {},
+                    "write": {}
+                }
+            }
+        },
         "wireProtocolEnabled": false
     },
     "version": 1

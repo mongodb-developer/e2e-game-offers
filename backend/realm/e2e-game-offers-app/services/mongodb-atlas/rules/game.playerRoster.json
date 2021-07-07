@@ -1,0 +1,58 @@
+{
+    "collection": "playerRoster",
+    "database": "game",
+    "id": "60ad3c4cdbd61dee219cf93c",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "insert": true,
+            "delete": true,
+            "search": true,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "lastUpdateDt": {
+                "bsonType": "date"
+            },
+            "playerId": {
+                "bsonType": "string"
+            },
+            "roster": {
+                "bsonType": "array",
+                "items": {
+                    "bsonType": "object",
+                    "properties": {
+                        "abilities": {
+                            "bsonType": "int"
+                        },
+                        "characterId": {
+                            "bsonType": "int"
+                        },
+                        "gearTier": {
+                            "bsonType": "int"
+                        },
+                        "level": {
+                            "bsonType": "int"
+                        },
+                        "redStars": {
+                            "bsonType": "int"
+                        },
+                        "shards": {
+                            "bsonType": "int"
+                        },
+                        "stars": {
+                            "bsonType": "int"
+                        }
+                    }
+                }
+            }
+        },
+        "title": "PlayerRoster"
+    }
+}

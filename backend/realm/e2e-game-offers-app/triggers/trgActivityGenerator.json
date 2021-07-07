@@ -3,8 +3,8 @@
     "name": "trgActivityGenerator",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "*/1 * * * *"
+        "schedule": "*/3 * * * *"
     },
-    "function_name": "funcMultiActivityGenerator",
-    "disabled": false
+    "function_name": "funcActivityGenerator",
+    "disabled": true
 }

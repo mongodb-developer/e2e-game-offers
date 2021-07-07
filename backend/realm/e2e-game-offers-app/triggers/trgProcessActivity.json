@@ -1,0 +1,20 @@
+{
+    "id": "60ca7376d66313f1729bb8d1",
+    "name": "trgProcessActivity",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT"
+        ],
+        "database": "game",
+        "collection": "playerActivityLast7Days",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "function_name": "funcProcessActivity",
+    "disabled": false
+}
