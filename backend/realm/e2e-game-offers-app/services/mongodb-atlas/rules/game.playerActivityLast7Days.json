@@ -1,0 +1,38 @@
+{
+    "collection": "playerActivityLast7Days",
+    "database": "game",
+    "id": "60c77b65a1f40719d570d0ba",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "insert": true,
+            "delete": true,
+            "search": true,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "activityDt": {
+                "bsonType": "date"
+            },
+            "amount": {
+                "bsonType": "int"
+            },
+            "characterId": {
+                "bsonType": "int"
+            },
+            "equipmentType": {
+                "bsonType": "string"
+            },
+            "playerId": {
+                "bsonType": "string"
+            }
+        },
+        "title": "PlayerActivityLast7Day"
+    }
+}

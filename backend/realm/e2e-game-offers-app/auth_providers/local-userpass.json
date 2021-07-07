@@ -1,0 +1,11 @@
+{
+    "id": "60abf5c5ba6d40c84dbd0359",
+    "name": "local-userpass",
+    "type": "local-userpass",
+    "config": {
+        "autoConfirm": true,
+        "resetPasswordUrl": "https://www.mongodb.com",
+        "runConfirmationFunction": false
+    },
+    "disabled": false
+}
