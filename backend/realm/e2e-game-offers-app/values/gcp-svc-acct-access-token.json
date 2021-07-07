@@ -1,0 +1,6 @@
+{
+    "id": "60b826a4e0692265ebdddd50",
+    "name": "gcp-svc-acct-access-token",
+    "value": "gcp-svc-acct-access-token-SECRET",
+    "from_secret": true
+}
