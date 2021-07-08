@@ -1,6 +1,6 @@
 {
     "id": "60e324889577187162f4c286",
-    "name": "valueToSecret",
+    "name": "funcSetRealmSecret",
     "private": false,
     "run_as_system": true
 }

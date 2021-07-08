@@ -1,6 +1,6 @@
 {
     "id": "60e324329577187162f48dfe",
-    "name": "realmToken",
+    "name": "funcRealmTokenRefresher",
     "private": false,
     "run_as_system": true
 }
