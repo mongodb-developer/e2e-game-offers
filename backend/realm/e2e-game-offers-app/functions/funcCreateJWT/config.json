@@ -1,6 +1,6 @@
 {
     "id": "60d4ab8d849d5a9e48dee6c1",
-    "name": "jwt",
+    "name": "funcCreateJWT",
     "private": false,
     "run_as_system": true
 }
