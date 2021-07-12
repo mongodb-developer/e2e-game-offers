@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour {
             case 16:
                 return "Zoltar";
             case 17:
-                return "Outlaw Beau Peck";
+                return "The Outlaw Beausy Wales";
             default:
                 return "Unknown [" + characterId.ToString() + "]";
         }
