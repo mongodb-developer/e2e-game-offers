@@ -11,3 +11,5 @@ Some gaming companies do present personalized offers, but they usually miss the 
 This causes loss of opportunity, given the lag from the time a user has taken an action, where a timely personalized offer could have been presented and had a higher chance of resulting in a purchase. 
 
 If gaming companies could react to player activity, in near-real time, and calculate and present personalized offers (using machine learning trained on player and purchasing behavior) in a matter of minutes or less (ideally as the gamer is engaged), we can increase the likelihood of microtransactions and increase revenue. 
+
+Watch the recording [here](https://www.youtube.com/watch?v=iHUa0PpI-ec). This demo was presented at [Game Developer's Conference 2022](https://gdc.informatech.com/2022)
