@@ -8,7 +8,7 @@ async function main() {
 
     //const uri = "mongodb+srv://main_game_user:main_game_user**@game-main.maftg.mongodb.net/game";
     const uri = "mongodb://localhost:27017/game";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(uri, {  });
 
     await client.connect();
 
